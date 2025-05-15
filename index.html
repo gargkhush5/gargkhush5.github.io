@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <header>
+    <img src="profile.jpg" alt="Khush Garg" class="profile-photo">
+    <h1>Khush Garg</h1>
+    <p class="tagline">Electrical Engineer | Power Systems, Data Analysis & Automation</p>
+    <p class="contact">
+      <a href="mailto:gargkhush5@gmail.com">gargkhush5@gmail.com</a> | 
+      <a href="tel:+918696056626">+91 8696056626</a> | 
+      Jaipur, India
+    </p>
+  </header>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </div>
+
+  <main>
+    <section id="home">
+      <h2>About Me</h2>
+      <p>Welcome to my personal website! I am Khush Garg, an Electrical Engineer specializing in Power Systems, Data Analysis, and Automation. Explore my resume, projects, and achievements.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Khush Garg</p>
+  </footer>
+
+  <script>
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('sidebar-active');
+    }
+
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        main.classList.remove('sidebar-active');
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('load', checkScreenWidth);
+    // Run when window is resized
+    window.addEventListener('resize', checkScreenWidth);
+  </script>
+</body>
+</html>
