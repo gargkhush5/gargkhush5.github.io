@@ -22,6 +22,47 @@ nav ul.tabs a:hover {
   text-decoration: underline;
 }
 
+/* Sidebar Styling */
+.sidebar {
+  position: fixed; /* Fix the sidebar to the left */
+  top: 0;
+  left: 0;
+  width: 200px; /* Set the width of the sidebar */
+  height: 100%; /* Make the sidebar span the full height of the page */
+  background-color: #004f90; /* Sidebar background color */
+  padding-top: 1rem; /* Add padding at the top */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Optional: Add a shadow */
+}
+
+.sidebar .tabs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar .tabs li {
+  margin: 1rem 0; /* Add spacing between tabs */
+}
+
+.sidebar .tabs a {
+  display: block; /* Make the links fill the width of the sidebar */
+  color: #fff; /* Text color */
+  text-decoration: none; /* Remove underline */
+  padding: 0.5rem 1rem; /* Add padding inside the links */
+  font-weight: bold;
+  transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+.sidebar .tabs a:hover {
+  background-color: #003366; /* Change background color on hover */
+}
+
+/* Main Content Styling */
+main {
+  margin-left: 220px; /* Add left margin to make space for the sidebar */
+  padding: 1rem; /* Add padding to the main content */
+}
+
 /* Center Header Content */
 header {
   display: flex;
@@ -58,7 +99,6 @@ header img.profile-photo {
   width: 20px;
   height: 20px;
 }
-
 
 /* Social Buttons Styling */
 .social-buttons {
