@@ -1,0 +1,337 @@
+/* Navigation Tabs */
+nav ul.tabs {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  background: #004f90;
+  padding: 0.5rem 0;
+  margin: 0;
+}
+
+nav ul.tabs li {
+  margin: 0 1rem;
+}
+
+nav ul.tabs a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+nav ul.tabs a:hover {
+  text-decoration: underline;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 100%;
+  background-color: #e3e6f3; /* Soft light blue */
+  padding-top: 1rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.08);
+  z-index: 2000; /* <-- Make sure this is higher than main/content */
+}
+
+.sidebar .tabs {
+  list-style: none;
+  padding: 0;
+  margin: 2.5rem 0 0 0; /* Push tabs down to avoid overlap with toggle button */
+}
+
+/* Sidebar Tabs */
+.sidebar .tabs a {
+  display: block;
+  color: #222; /* Black text */
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar .tabs a:hover {
+  background-color: #c7d0e6; /* Slightly darker blue on hover */
+  color: #004f90; /* Accent color on hover */
+}
+
+/* Sidebar Toggle Button */
+.sidebar-toggle {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  background-color: #004f90;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.sidebar-toggle:hover {
+  background-color: #003366;
+}
+
+/* Sidebar close button */
+.sidebar-close {
+  display: none;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #004f90;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 2100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 2000; /* <-- Ensure this is set */
+  }
+
+  .sidebar.active {
+    transform: translateX(0);
+  }
+
+  main {
+    margin-left: 0 !important;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh; /* Ensures vertical centering if needed */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  main > section {
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+    margin: 0 auto;
+  }
+
+  main.sidebar-active {
+    /* Optionally, add a semi-transparent overlay to main when sidebar is open */
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  .sidebar-close {
+    display: block;
+  }
+}
+
+/* Always show sidebar on larger screens */
+@media (min-width: 769px) {
+  .sidebar-toggle {
+    display: none;
+  }
+}
+
+/* Main Content Styling */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  background-color: #f8f9fa;
+}
+
+main {
+  flex: 1;
+  margin-left: 220px; /* Adjust for sidebar width */
+  padding: 1rem;
+}
+
+/* Center Header Content */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #f4f4f4; /* Optional: Add a light background color */
+}
+
+/* Profile Photo Styling */
+header img.profile-photo {
+  width: 150px; /* Adjust the width as needed */
+  height: 150px; /* Ensure the height matches for a square image */
+  border-radius: 50%; /* Makes the image circular */
+  margin-bottom: 1rem; /* Adds spacing below the image */
+  border: 3px solid #fff; /* Optional: Add a white border */
+  object-fit: cover; /* Ensures the image scales properly */
+}
+
+/* Social Buttons */
+.social-buttons .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+social-buttons img {
+  width: 20px;
+  height: 20px;
+}
+
+/* Social Buttons Styling */
+.social-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.social-buttons .btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  width: 200px; /* Set a fixed width for uniform buttons */
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.social-buttons .btn img {
+  width: 20px;
+  height: 20px;
+}
+
+.social-buttons .btn:hover {
+  transform: translateY(-3px); /* Slight lift on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+}
+
+/* Individual Button Colors */
+.social-buttons .whatsapp {
+  background: #25D366;
+}
+
+.social-buttons .facebook {
+  background: #3b5998;
+}
+
+.social-buttons .instagram {
+  background: #E1306C;
+}
+
+.social-buttons .twitter {
+  background: #1DA1F2;
+}
+
+.social-buttons .linkedin {
+  background: #0077B5;
+}
+
+.social-buttons .github {
+  background: #333;
+}
+
+/* Download Resume Button */
+.btn.download {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: #004f90; /* Button background color */
+  color: #fff; /* Text color */
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth hover effect */
+}
+
+.btn.download img {
+  width: 20px; /* Adjust the size of the download icon */
+  height: 20px;
+}
+
+.btn.download:hover {
+  transform: translateY(-3px); /* Slight lift on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+}
+
+/* Photo Gallery Styling */
+.photo-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.photo-gallery img {
+  width: 200px; /* Adjust the size of the photos */
+  height: auto;
+  border-radius: 5px; /* Optional: Add rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+  transition: transform 0.3s ease; /* Smooth hover effect */
+}
+
+.photo-gallery img:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Footer Styling */
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #004f90;
+  color: #fff;
+  margin-top: auto;
+}
+
+/* Info Card Styling */
+.info-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Section Title Styling */
+.section-title {
+  color: #004f90;
+  border-bottom: 2px solid #004f90;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.8rem;
+}
+
+
