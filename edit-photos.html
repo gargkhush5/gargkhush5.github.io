@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Photos - Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <!-- Firebase SDK -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+    .edit-container {
+      padding: 2rem;
+      margin-left: 200px;
+      max-width: 1000px;
+    }
+    .edit-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .photos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .photo-item {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      border: 2px dashed #ddd;
+      transition: all 0.2s;
+    }
+    .photo-item.has-photo {
+      border: 2px solid #004f90;
+      background: white;
+    }
+    .photo-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .photo-upload-area {
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #666;
+    }
+    .photo-upload-area:hover {
+      background: #e8f4fd;
+      border-color: #004f90;
+    }
+    .photo-upload-area.dragover {
+      background: #e8f4fd;
+      border-color: #004f90;
+    }
+    .photo-controls {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    .btn-small {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary {
+      background: #004f90;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #003b6d;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-weight: 500;
+      color: #333;
+      font-size: 0.9rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      box-sizing: border-box;
+    }
+    .form-group input:focus {
+      border-color: #004f90;
+      outline: none;
+    }
+    .btn {
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-right: 1rem;
+    }
+    .btn:hover {
+      background: #003b6d;
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .success-message {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .error-message {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .gallery-settings {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    @media (max-width: 768px) {
+      .edit-container {
+        margin-left: 0;
+        padding: 1rem;
+      }
+      .photos-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="author-dashboard.html">Dashboard</a></li>
+    </ul>
+  </div>
+
+  <div class="edit-container">
+    <div class="edit-card">
+      <h1>Edit Photo Gallery</h1>
+      <p>Manage your photo gallery. You can upload new photos, update captions, or remove existing ones.</p>
+      
+      <div class="success-message" id="successMessage">
+        Photos updated successfully!
+      </div>
+      
+      <div class="error-message" id="errorMessage">
+        Error updating photos. Please try again.
+      </div>
+
+      <!-- Gallery Settings -->
+      <div class="gallery-settings">
+        <h3>Gallery Settings</h3>
+        <div class="form-group">
+          <label for="galleryTitle">Gallery Title</label>
+          <input type="text" id="galleryTitle" value="My Favorite Photos">
+        </div>
+        <div class="form-group">
+          <label for="galleryDescription">Gallery Description (optional)</label>
+          <input type="text" id="galleryDescription" placeholder="A collection of my favorite moments...">
+        </div>
+      </div>
+
+      <!-- Photo Grid -->
+      <div class="photos-grid" id="photosGrid">
+        <!-- Photos will be loaded here -->
+      </div>
+
+      <div style="margin-top: 2rem;">
+        <button type="button" class="btn" onclick="savePhotos()">Save Changes</button>
+        <a href="author-dashboard.html" class="btn btn-secondary">Cancel</a>
+      </div>
+    </div>
+  </div>  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82Pe71bNVmQFhThlZa_YWsrB7QwEAQaE",
+      authDomain: "khush-portfolio-23e8e.firebaseapp.com",
+      projectId: "khush-portfolio-23e8e",
+      storageBucket: "khush-portfolio-23e8e.firebasestorage.app",
+      messagingSenderId: "114583728382",
+      appId: "1:114583728382:web:ccc2c215f028b29d2275af"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+      // Hide page content immediately until authentication is verified
+    document.body.style.display = 'none';
+    
+    // FAST LOADING: Check localStorage immediately for quick access
+    const isLocallyAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLocallyAuthenticated) {
+      // Show page immediately if localStorage indicates user is logged in
+      document.body.style.display = 'block';
+      initializePage();
+      console.log('Edit Photos loaded instantly via localStorage');
+    }
+    
+    // Authentication state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Firebase confirms authentication
+        document.body.style.display = 'block';
+        initializePage();
+        console.log('Edit Photos verified via Firebase');
+      } else {
+        // No Firebase user, check localStorage fallback
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+          // Keep page visible for localStorage authenticated users
+          document.body.style.display = 'block';
+          initializePage();
+          console.log('Edit Photos using localStorage fallback');
+        } else {
+          // Not authenticated, redirect to login
+          console.log('No authentication found, redirecting to login');
+          window.location.href = 'author-login.html';
+        }
+      }
+    });
+
+    // Initialize page functionality after authentication is confirmed
+    function initializePage() {
+      loadPhotosData();
+    }
+
+    let photosData = [];
+    const maxPhotos = 8;
+
+    // Load current photos data
+    function loadPhotosData() {
+      const savedPhotos = JSON.parse(localStorage.getItem('photosData')) || [];
+      const savedSettings = JSON.parse(localStorage.getItem('gallerySettings')) || {
+        title: 'My Favorite Photos',
+        description: ''
+      };
+
+      // If no saved photos, initialize with default photos
+      if (savedPhotos.length === 0) {
+        photosData = [
+          { id: 1, src: 'photos/photo1.jpg', alt: 'Photo 1', caption: 'Photo 1' },
+          { id: 2, src: 'photos/photo2.jpg', alt: 'Photo 2', caption: 'Photo 2' },
+          { id: 3, src: 'photos/photo3.jpg', alt: 'Photo 3', caption: 'Photo 3' },
+          { id: 4, src: 'photos/photo4.jpg', alt: 'Photo 4', caption: 'Photo 4' },
+          { id: 5, src: 'photos/photo5.jpg', alt: 'Photo 5', caption: 'Photo 5' }
+        ];
+      } else {
+        photosData = savedPhotos;
+      }
+
+      // Load gallery settings
+      document.getElementById('galleryTitle').value = savedSettings.title;
+      document.getElementById('galleryDescription').value = savedSettings.description;
+
+      renderPhotosGrid();
+    }
+
+    function renderPhotosGrid() {
+      const grid = document.getElementById('photosGrid');
+      grid.innerHTML = '';
+
+      // Render existing photos
+      photosData.forEach((photo, index) => {
+        const photoItem = createPhotoItem(photo, index);
+        grid.appendChild(photoItem);
+      });
+
+      // Add empty slots for new photos (up to maxPhotos)
+      for (let i = photosData.length; i < maxPhotos; i++) {
+        const emptyItem = createEmptyPhotoItem(i);
+        grid.appendChild(emptyItem);
+      }
+    }
+
+    function createPhotoItem(photo, index) {
+      const div = document.createElement('div');
+      div.className = 'photo-item has-photo';
+      div.innerHTML = `
+        <img src="${photo.src}" alt="${photo.alt}">
+        <div class="form-group">
+          <label>Caption</label>
+          <input type="text" value="${photo.caption}" onchange="updatePhotoCaption(${index}, this.value)">
+        </div>
+        <div class="photo-controls">
+          <button class="btn-small btn-primary" onclick="replacePhoto(${index})">Replace</button>
+          <button class="btn-small btn-danger" onclick="removePhoto(${index})">Remove</button>
+        </div>
+        <input type="file" id="replace-${index}" accept="image/*" style="display: none;" onchange="handlePhotoReplace(${index}, this)">
+      `;
+      return div;
+    }
+
+    function createEmptyPhotoItem(index) {
+      const div = document.createElement('div');
+      div.className = 'photo-item';
+      div.innerHTML = `
+        <div class="photo-upload-area" onclick="addPhoto(${index})">
+          <span style="font-size: 2rem; color: #ccc;">📷</span>
+          <p style="margin: 0.5rem 0 0 0;">Add Photo</p>
+        </div>
+        <input type="file" id="add-${index}" accept="image/*" style="display: none;" onchange="handlePhotoAdd(${index}, this)">
+      `;
+
+      // Add drag and drop functionality
+      const uploadArea = div.querySelector('.photo-upload-area');
+      uploadArea.addEventListener('dragover', handleDragOver);
+      uploadArea.addEventListener('dragleave', handleDragLeave);
+      uploadArea.addEventListener('drop', (e) => handleDrop(e, index));
+
+      return div;
+    }
+
+    function addPhoto(index) {
+      document.getElementById(`add-${index}`).click();
+    }
+
+    function replacePhoto(index) {
+      document.getElementById(`replace-${index}`).click();
+    }    function handlePhotoAdd(index, input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const newPhoto = {
+            id: Date.now(),
+            src: e.target.result,
+            alt: `Photo ${photosData.length + 1}`,
+            caption: `Photo ${photosData.length + 1}`
+          };
+          photosData.push(newPhoto);
+          renderPhotosGrid();
+          
+          // Show success message
+          const successMessage = document.getElementById('successMessage');
+          successMessage.style.display = 'block';
+          successMessage.textContent = 'Photo added successfully!';
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000);
+        };
+        reader.onerror = function() {
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'Error loading image. Please try again.';
+        };
+        reader.readAsDataURL(file);
+      } else if (file) {
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 'Please select an image file.';
+        setTimeout(() => {
+          document.getElementById('errorMessage').style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function handlePhotoReplace(index, input) {
+      const file = input.files[0];
+      if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          photosData[index].src = e.target.result;
+          renderPhotosGrid();
+          
+          // Show success message
+          const successMessage = document.getElementById('successMessage');
+          successMessage.style.display = 'block';
+          successMessage.textContent = 'Photo replaced successfully!';
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            successMessage.style.display = 'none';
+          }, 3000);
+        };
+        reader.onerror = function() {
+          document.getElementById('errorMessage').style.display = 'block';
+          document.getElementById('errorMessage').textContent = 'Error replacing image. Please try again.';
+        };
+        reader.readAsDataURL(file);
+      } else if (file) {
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 'Please select an image file.';
+        setTimeout(() => {
+          document.getElementById('errorMessage').style.display = 'none';
+        }, 3000);
+      }
+    }
+
+    function updatePhotoCaption(index, caption) {
+      photosData[index].caption = caption;
+      photosData[index].alt = caption;
+    }
+
+    function removePhoto(index) {
+      if (confirm('Are you sure you want to remove this photo?')) {
+        photosData.splice(index, 1);
+        renderPhotosGrid();
+      }
+    }
+
+    // Drag and drop functionality
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.currentTarget.classList.add('dragover');
+    }
+
+    function handleDragLeave(e) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('dragover');
+    }
+
+    function handleDrop(e, index) {
+      e.preventDefault();
+      e.currentTarget.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files[0] && files[0].type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const newPhoto = {
+            id: Date.now(),
+            src: e.target.result,
+            alt: `Photo ${photosData.length + 1}`,
+            caption: `Photo ${photosData.length + 1}`
+          };
+          photosData.push(newPhoto);
+          renderPhotosGrid();
+        };
+        reader.readAsDataURL(files[0]);
+      }
+    }    function savePhotos() {
+      const gallerySettings = {
+        title: document.getElementById('galleryTitle').value,
+        description: document.getElementById('galleryDescription').value,
+        lastUpdated: new Date().toISOString()
+      };
+
+      try {
+        // Save to localStorage
+        localStorage.setItem('photosData', JSON.stringify(photosData));
+        localStorage.setItem('gallerySettings', JSON.stringify(gallerySettings));
+        
+        // Show success message
+        document.getElementById('successMessage').style.display = 'block';
+        document.getElementById('successMessage').textContent = 'Photos saved successfully!';
+        document.getElementById('errorMessage').style.display = 'none';
+        
+        // Hide success message after 3 seconds
+        setTimeout(() => {
+          document.getElementById('successMessage').style.display = 'none';
+        }, 3000);
+        
+        return true;
+      } catch (error) {
+        console.error('Error saving photos:', error);
+        document.getElementById('errorMessage').style.display = 'block';
+        document.getElementById('errorMessage').textContent = 'Error saving photos. Please try again.';
+        document.getElementById('successMessage').style.display = 'none';
+        
+        setTimeout(() => {
+          document.getElementById('errorMessage').style.display = 'none';
+        }, 3000);
+        
+        return false;
+      }
+    }
+
+    // Sidebar functionality
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(0)';
+      sidebarClose.style.display = 'block';
+    }
+    
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(-100%)';
+      sidebarClose.style.display = 'none';
+    }
+
+    function initSidebar() {
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+    }
+    
+    window.addEventListener('load', () => {
+      initSidebar();
+      loadPhotosData();
+    });    window.addEventListener('resize', initSidebar);
+  </script>
+</body>
+</html>

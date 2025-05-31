@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume - Khush Garg</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Download My Resume</h1>
+  </header>
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <!-- Close button inside sidebar -->
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <!-- Admin info section - added by auth-ui.js -->
+  </div>
+  <main>
+    <section id="resume">
+      <h2>Download My Resume</h2>
+      <p id="resumeDescription">Click the button below to download my resume:</p>
+      
+      <!-- Resume preview section -->
+      <div id="resumePreview" style="display: none; margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px;">
+        <h3 style="margin-top: 0; color: #004f90;">Resume Preview</h3>
+        <div id="resumeContent">
+          <!-- Dynamic resume content will be loaded here -->
+        </div>
+      </div>
+        <div style="margin: 2rem 0;">
+        <a href="resume.pdf" download class="btn download" id="downloadBtn">
+          <img src="icons/download.png" alt="Download Icon"> Download Resume
+        </a>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 Khush Garg</p>
+  </footer>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script>
+    // Load custom resume data
+    function loadResumeData() {
+      const resumeData = JSON.parse(localStorage.getItem('resumeData'));
+      const resumeFile = JSON.parse(localStorage.getItem('resumeFile'));
+        // Update download link if custom resume file exists
+      if (resumeFile) {
+        const downloadBtn = document.getElementById('downloadBtn');
+        const description = document.getElementById('resumeDescription');
+        
+        downloadBtn.href = resumeFile.data;
+        downloadBtn.download = resumeFile.name;
+        description.textContent = `Download my latest resume (${resumeFile.name}):`;
+      }
+      
+      // Display resume content preview if available
+      if (resumeData && resumeData.personalInfo) {
+        const resumeContent = document.getElementById('resumeContent');
+        const preview = document.getElementById('resumePreview');
+        
+        let contentHTML = '';
+        const info = resumeData.personalInfo;
+        
+        // Personal info section
+        if (info.fullName || info.jobTitle) {
+          contentHTML += `<div style="margin-bottom: 1.5rem;">`;
+          if (info.fullName) contentHTML += `<h4 style="margin: 0; color: #004f90;">${info.fullName}</h4>`;
+          if (info.jobTitle) contentHTML += `<p style="margin: 0.3rem 0; font-weight: 600; color: #666;">${info.jobTitle}</p>`;
+          if (info.email || info.phone || info.location) {
+            contentHTML += `<p style="margin: 0.5rem 0; color: #666;">`;
+            const contacts = [info.email, info.phone, info.location].filter(Boolean);
+            contentHTML += contacts.join(' | ');
+            contentHTML += `</p>`;
+          }
+          contentHTML += `</div>`;
+        }
+        
+        // Summary section
+        if (info.summary) {
+          contentHTML += `<div style="margin-bottom: 1.5rem;">
+            <h5 style="margin: 0 0 0.5rem 0; color: #004f90;">Professional Summary</h5>
+            <p style="margin: 0; line-height: 1.5;">${info.summary}</p>
+          </div>`;
+        }
+        
+        // Skills section
+        if (info.skills) {
+          contentHTML += `<div style="margin-bottom: 1.5rem;">
+            <h5 style="margin: 0 0 0.5rem 0; color: #004f90;">Skills</h5>
+            <p style="margin: 0; line-height: 1.5;">${info.skills}</p>
+          </div>`;
+        }
+        
+        // Experience section
+        if (resumeData.experience && resumeData.experience.length > 0) {
+          contentHTML += `<div style="margin-bottom: 1.5rem;">
+            <h5 style="margin: 0 0 0.5rem 0; color: #004f90;">Experience</h5>`;
+          resumeData.experience.forEach(exp => {
+            if (exp.title || exp.company) {
+              contentHTML += `<div style="margin-bottom: 1rem;">`;
+              if (exp.title) contentHTML += `<strong>${exp.title}</strong>`;
+              if (exp.company) contentHTML += ` at ${exp.company}`;
+              if (exp.startDate || exp.endDate) {
+                contentHTML += ` <span style="color: #666;">(${exp.startDate || ''} - ${exp.endDate || ''})</span>`;
+              }
+              if (exp.description) contentHTML += `<p style="margin: 0.3rem 0; color: #666;">${exp.description}</p>`;
+              contentHTML += `</div>`;
+            }
+          });
+          contentHTML += `</div>`;
+        }
+        
+        if (contentHTML) {
+          resumeContent.innerHTML = contentHTML;
+          preview.style.display = 'block';
+        }
+      }    }
+    
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('sidebar-active');
+    }
+
+    // Function to close sidebar
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.remove('active');
+      main.classList.remove('sidebar-active');
+    }
+
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        main.classList.remove('sidebar-active');
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
+      }
+    }    // Run on page load
+    window.addEventListener('load', () => {
+      checkScreenWidth();
+      loadResumeData();
+    });
+    // Run when window is resized
+    window.addEventListener('resize', checkScreenWidth);
+  </script>
+</body>
+</html>

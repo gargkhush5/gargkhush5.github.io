@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author Dashboard - Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+    .dashboard-container {
+      padding: 2rem;
+      margin-left: 200px; /* Match sidebar width */
+    }
+    .welcome-section {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .dashboard-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .dashboard-stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .stat-box {
+      flex: 1;
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #004f90;
+      margin: 0;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      color: #666;
+    }
+    .section-title {
+      color: #004f90;
+      border-bottom: 2px solid #004f90;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .action-button {
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .action-button:hover {
+      background: #003b6d;
+    }
+    .action-button.secondary {
+      background: #6c757d;
+    }
+    .action-button.secondary:hover {
+      background: #5a6268;
+    }
+    @media (max-width: 768px) {
+      .dashboard-container {
+        margin-left: 0;
+        padding: 1rem;
+      }
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      .dashboard-stats {
+        flex-direction: column;
+      }
+    }
+  </style>
+  <!-- Firebase SDK -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+</head>
+<body>  <!-- Logout Button removed - now handled by sidebar -->
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <!-- Close button inside sidebar -->
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="author-dashboard.html">Dashboard</a></li>
+    </ul>
+  </div>
+
+  <div class="dashboard-container">
+    <section class="welcome-section">
+        <h1>Author Dashboard</h1>
+        <p>Welcome to your dashboard, <span id="username-display"></span>!</p>
+        <p>This is your private author area where you can manage your website content.</p>
+  
+        <!-- Add Firebase status indicator -->
+        <div style="background: #d4edda; border: 1px solid #c3e6cb; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+            <strong>🔒 Secure Cloud Storage Active:</strong> Your notes and data are now securely stored in the cloud and will sync across all your devices.
+        </div>
+    </section>  
+
+    <div class="dashboard-stats">
+      <div class="stat-box">
+        <p class="stat-number">42</p>
+        <p class="stat-label">Total Visitors</p>
+      </div>
+      <div class="stat-box">
+        <p class="stat-number">8</p>
+        <p class="stat-label">Published Articles</p>
+      </div>
+      <div class="stat-box">
+        <p class="stat-number">15</p>
+        <p class="stat-label">Contact Inquiries</p>
+      </div>
+    </div>    <div class="dashboard-grid">      <div class="dashboard-card">
+        <h2 class="section-title">Content Management</h2>
+        <p>Update and manage website content.</p>
+        <div class="action-buttons">
+          <a href="edit-resume.html" class="action-button">Edit Resume</a>
+          <a href="edit-photos.html" class="action-button">Manage Photos</a>
+          <a href="manage-social.html" class="action-button">Social Media Links</a>
+        </div>
+      </div>
+
+      <div class="dashboard-card">        
+        <h2 class="section-title">Account Settings</h2>
+        <p>Update your login credentials and personal details.</p>
+        <div class="action-buttons">
+          <a href="change-password.html" class="action-button">Change Password</a>
+          <a href="change-username.html" class="action-button">Change Username</a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="dashboard-grid">
+      <div class="dashboard-card">
+        <h2 class="section-title">My Notes</h2>
+        <p>Create and manage personal notes.</p>
+        <div class="action-buttons">
+          <a href="notes.html" class="action-button">View All Notes</a>
+        </div>
+      </div>      <div class="dashboard-card">          <h2 class="section-title">Contact Inquiries</h2>
+        <p>View messages from visitors. Submissions are handled by Formspree.</p>
+        <div class="action-buttons">
+          <a href="https://formspree.io/forms/xldbvybe" target="_blank" class="action-button" style="background: #28a745;">View Submissions</a>
+        </div>
+        <p style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem;">
+          Contact form submissions are sent to your email and stored in Formspree dashboard.
+        </p>
+      </div>
+    </div>
+
+    <div class="dashboard-card">
+      <h2 class="section-title">Recent Activity</h2>
+      <ul>
+        <li>Profile page updated - May 30, 2025</li>
+        <li>New photo added to gallery - May 28, 2025</li>
+        <li>Resume updated - May 25, 2025</li>
+        <li>Contact form submission from john@example.com - May 22, 2025</li>
+      </ul>
+    </div>  </div>  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82Pe71bNVmQFhThlZa_YWsrB7QwEAQaE",
+      authDomain: "khush-portfolio-23e8e.firebaseapp.com",
+      projectId: "khush-portfolio-23e8e",
+      storageBucket: "khush-portfolio-23e8e.firebasestorage.app",
+      messagingSenderId: "114583728382",
+      appId: "1:114583728382:web:ccc2c215f028b29d2275af"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    
+    // Apply immediate page protection
+    document.body.style.display = 'none';
+
+    // Add logout function to clear all authentication data
+    window.performLogout = async function() {
+      try {
+        // Clear all auth data
+        await signOut(auth);
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('username');
+        localStorage.removeItem('userEmail');
+        
+        // Redirect to login page
+        window.location.href = 'author-login.html';
+      } catch (error) {
+        console.error('Logout error:', error);
+      }
+    };
+
+    // Double-check authentication on page load
+    let authChecked = false;
+    
+    onAuthStateChanged(auth, (user) => {
+      if (authChecked) return; // Prevent multiple checks
+      authChecked = true;
+      
+      if (user) {
+        // User is signed in with Firebase
+        document.body.style.display = 'block';
+      } else {
+        // Check localStorage fallback
+        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+        
+        if (isLoggedIn) {
+          // Double-verify by checking if this is a stale localStorage value
+          const lastLoginTime = localStorage.getItem('lastLoginTime');
+          const currentTime = new Date().getTime();
+          const sessionTimeout = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+          
+          if (lastLoginTime && (currentTime - parseInt(lastLoginTime)) < sessionTimeout) {
+            document.body.style.display = 'block';
+          } else {
+            // Session expired or invalid
+            window.performLogout();
+          }
+        } else {
+          // Not logged in at all
+          window.location.href = 'author-login.html';
+        }
+      }
+    });
+    
+    // Sidebar functionality
+    window.toggleSidebar = function() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(0)';
+      sidebarClose.style.display = 'block';
+    };
+    
+    window.closeSidebar = function() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(-100%)';
+      sidebarClose.style.display = 'none';
+    };
+
+    // For mobile devices - check if we need to initially hide the sidebar
+    function initSidebar() {
+      if (window.innerWidth <= 768) {
+        window.closeSidebar();
+      }
+    }
+    
+    // Initialize sidebar on page load
+    window.addEventListener('load', initSidebar);
+    window.addEventListener('resize', initSidebar);
+  </script>
+  <!-- Add this to author-dashboard.html and all other protected pages -->
+  <script type="module">
+    import { performLogout } from './scripts/logout.js';
+    
+    // Make logout available globally for button clicks
+    window.logoutUser = performLogout;
+    
+    // Add click listener to logout buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutButtons = document.querySelectorAll('.logout-btn, [data-action="logout"]');
+      logoutButtons.forEach(button => {
+        button.addEventListener('click', performLogout);
+      });
+    });
+  </script>
+</body>
+</html>

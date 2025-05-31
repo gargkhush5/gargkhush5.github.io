@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photos - Khush Garg</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Photo Gallery</h1>
+  </header>
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+
+  <!-- Sidebar Navigation -->
+<div class="sidebar">
+  <!-- Close button inside sidebar -->
+  <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>  <ul class="tabs">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="social.html">Social</a></li>
+    <li><a href="resume.html">Resume</a></li>
+    <li><a href="photos.html">Photos</a></li>
+    <li><a href="contact.html">Contact</a></li>
+  </ul>
+  <!-- Admin info section - added by auth-ui.js -->
+</div>
+
+  <main>    <section id="photos">
+      <h2>My Favorite Photos</h2>
+      <div class="photo-gallery">
+        <img src="photos/photo1.jpg" alt="Photo 1">
+        <img src="photos/photo2.jpg" alt="Photo 2">
+        <img src="photos/photo3.jpg" alt="Photo 3">
+        <img src="photos/photo4.jpg" alt="Photo 4">
+        <img src="photos/photo5.jpg" alt="Photo 5">
+      </div>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2025 Khush Garg</p>
+  </footer>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script>
+    // Load custom photo gallery data
+    function loadPhotoGallery() {
+      const photosData = JSON.parse(localStorage.getItem('photosData'));
+      const gallerySettings = JSON.parse(localStorage.getItem('gallerySettings'));
+      
+      // Update gallery title and description if custom data exists
+      if (gallerySettings) {
+        if (gallerySettings.title) {
+          const galleryTitle = document.querySelector('#photos h2');
+          if (galleryTitle) {
+            galleryTitle.textContent = gallerySettings.title;
+          }
+        }
+        
+        if (gallerySettings.description) {
+          // Add description if it doesn't exist
+          let descriptionEl = document.querySelector('#photos .gallery-description');
+          if (!descriptionEl) {
+            descriptionEl = document.createElement('p');
+            descriptionEl.className = 'gallery-description';
+            descriptionEl.style.marginBottom = '1.5rem';
+            descriptionEl.style.color = '#666';
+            document.querySelector('#photos h2').after(descriptionEl);
+          }
+          descriptionEl.textContent = gallerySettings.description;
+        }
+      }
+      
+      // Update photo gallery if custom photos exist
+      if (photosData && photosData.length > 0) {
+        const photoGallery = document.querySelector('.photo-gallery');
+        if (photoGallery) {
+          photoGallery.innerHTML = '';
+          
+          photosData.forEach(photo => {
+            const img = document.createElement('img');
+            img.src = photo.src;
+            img.alt = photo.alt || photo.caption;
+            img.title = photo.caption;
+            photoGallery.appendChild(img);
+          });
+        }
+      }
+    }
+    
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('sidebar-active');
+    }
+
+    // Function to close sidebar
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.remove('active');
+      main.classList.remove('sidebar-active');
+    }
+
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        main.classList.remove('sidebar-active');
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
+      }
+    }    // Run on page load
+    window.addEventListener('load', () => {
+      checkScreenWidth();
+      loadPhotoGallery();
+    });
+    // Run when window is resized
+    window.addEventListener('resize', checkScreenWidth);
+  </script>
+</body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Social Links - Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+    }
+    .social-container {
+      padding: 2rem;
+      margin-left: 200px; /* Match sidebar width */
+      max-width: 800px;
+    }
+    .social-header {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .social-header h1 {
+      color: #004f90;
+      margin-top: 0;
+    }
+    .social-form {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1.2rem;
+    }
+    .form-group label {
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+    .form-group input {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: border 0.2s;
+    }
+    .form-group input:focus {
+      border-color: #004f90;
+      outline: none;
+    }
+    .save-btn {
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.9rem 1.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 1rem;
+    }
+    .save-btn:hover {
+      background: #003b6d;
+    }
+    .back-btn {
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 0.9rem 1.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 1rem;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 1rem;
+    }
+    .back-btn:hover {
+      background: #5a6268;
+    }
+    .success-message {
+      color: #27ae60;
+      font-size: 0.95rem;
+      background: #e9f7ef;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+    .section-title {
+      color: #004f90;
+      border-bottom: 2px solid #004f90;
+      padding-bottom: 0.3rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+    .social-platform {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .social-icon {
+      width: 32px;
+      height: 32px;
+      margin-right: 1rem;
+    }
+    .social-input {
+      flex-grow: 1;
+    }
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #6c757d;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      z-index: 100;
+    }
+    .logout-btn:hover {
+      background: #5a6268;
+    }
+    @media (max-width: 768px) {
+      .social-container {
+        margin-left: 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>  <!-- Logout Button removed - now handled by sidebar -->
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <!-- Close button inside sidebar -->
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="author-dashboard.html">Dashboard</a></li>
+      <li><a href="#" data-action="logout" style="color: #dc3545; font-weight: 600;">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="social-container">
+    <div class="social-header">
+      <h1>Manage Social Links</h1>
+      <p>Update your social media profiles and contact information</p>
+    </div>
+    
+    <div class="social-form">
+      <h2 class="section-title">Social Media Links</h2>
+      
+      <div class="social-platform">
+        <img src="icons/whatsapp.png" alt="WhatsApp" class="social-icon">
+        <div class="social-input">
+          <label for="whatsapp">WhatsApp</label>
+          <input type="text" id="whatsapp" placeholder="WhatsApp link (e.g., https://wa.me/1234567890)" value="https://wa.me/918696056626">
+        </div>
+      </div>
+      
+      <div class="social-platform">
+        <img src="icons/facebook.png" alt="Facebook" class="social-icon">
+        <div class="social-input">
+          <label for="facebook">Facebook</label>
+          <input type="text" id="facebook" placeholder="Facebook profile link" value="https://facebook.com/khushgarg2910">
+        </div>
+      </div>
+      
+      <div class="social-platform">
+        <img src="icons/instagram.png" alt="Instagram" class="social-icon">
+        <div class="social-input">
+          <label for="instagram">Instagram</label>
+          <input type="text" id="instagram" placeholder="Instagram profile link" value="https://instagram.com/khushgarg.in">
+        </div>
+      </div>
+      
+      <div class="social-platform">
+        <img src="icons/twitter.png" alt="Twitter" class="social-icon">
+        <div class="social-input">
+          <label for="twitter">Twitter/X</label>
+          <input type="text" id="twitter" placeholder="Twitter/X profile link" value="https://x.com/gargkhush5">
+        </div>
+      </div>
+      
+      <div class="social-platform">
+        <img src="icons/linkedin.png" alt="LinkedIn" class="social-icon">
+        <div class="social-input">
+          <label for="linkedin">LinkedIn</label>
+          <input type="text" id="linkedin" placeholder="LinkedIn profile link" value="https://linkedin.com/in/gargkhush5">
+        </div>
+      </div>
+      
+      <div class="social-platform">
+        <img src="icons/github.png" alt="GitHub" class="social-icon">
+        <div class="social-input">
+          <label for="github">GitHub</label>
+          <input type="text" id="github" placeholder="GitHub profile link" value="https://github.com/gargkhush5">
+        </div>
+      </div>
+      
+      <div class="success-message" id="successMessage">
+        Your social links have been successfully updated.
+      </div>
+      
+      <div>
+        <a href="author-dashboard.html" class="back-btn">Back to Dashboard</a>
+        <button class="save-btn" onclick="saveSocialLinks()">Save Changes</button>
+      </div>
+    </div>
+  </div>  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script src="scripts/social-links.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82Pe71bNVmQFhThlZa_YWsrB7QwEAQaE",
+      authDomain: "khush-portfolio-23e8e.firebaseapp.com",
+      projectId: "khush-portfolio-23e8e",
+      storageBucket: "khush-portfolio-23e8e.firebasestorage.app",
+      messagingSenderId: "114583728382",
+      appId: "1:114583728382:web:ccc2c215f028b29d2275af"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+      // Hide page content immediately until authentication is verified
+    document.body.style.display = 'none';
+    
+    // FAST LOADING: Check localStorage immediately for quick access
+    const isLocallyAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLocallyAuthenticated) {
+      // Show page immediately if localStorage indicates user is logged in
+      document.body.style.display = 'block';
+      initializePage();
+      console.log('Manage Social loaded instantly via localStorage');
+    }
+    
+    // Authentication state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Firebase confirms authentication
+        document.body.style.display = 'block';
+        initializePage();
+        console.log('Manage Social verified via Firebase');
+      } else {
+        // No Firebase user, check localStorage fallback
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+          // Keep page visible for localStorage authenticated users
+          document.body.style.display = 'block';
+          initializePage();
+          console.log('Manage Social using localStorage fallback');
+        } else {
+          // Not authenticated, redirect to login
+          console.log('No authentication found, redirecting to login');
+          window.location.href = 'author-login.html';
+        }
+      }
+    });    // Initialize page functionality after authentication is confirmed
+    function initializePage() {
+      // Load existing social links into the form
+      loadSocialLinksForm();
+    }
+    
+    // Function to call when save button is clicked
+    function saveSocialLinks() {
+      saveSocialLinksFromForm();
+      
+      // Show a success message when the save is successful
+      document.getElementById('successMessage').style.display = 'block';
+      
+      // Hide the success message after 3 seconds
+      setTimeout(() => {
+        document.getElementById('successMessage').style.display = 'none';
+      }, 3000);
+    }
+    // Sidebar functionality
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(0)';
+      sidebarClose.style.display = 'block';
+    }
+    
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(-100%)';
+      sidebarClose.style.display = 'none';
+    }
+
+    // For mobile devices - check if we need to initially hide the sidebar
+    function initSidebar() {
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+    }
+    
+    // Initialize sidebar on page load
+    window.addEventListener('load', initSidebar);
+    window.addEventListener('resize', initSidebar);
+  </script>
+</body>
+</html>

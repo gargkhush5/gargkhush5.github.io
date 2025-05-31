@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Links - Khush Garg</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <h1>Social Links</h1>
+  </header>
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <!-- Close button inside sidebar -->
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <!-- Admin info section - added by auth-ui.js -->
+  </div>
+  <main>
+    <section id="social">
+      <h2>Connect with Me</h2>
+      <div class="social-buttons">
+        <a href="https://wa.me/918696056626" target="_blank" class="btn whatsapp">
+          <img src="icons/whatsapp.png" alt="WhatsApp"> WhatsApp
+        </a>
+        <a href="https://facebook.com/khushgarg2910" target="_blank" class="btn facebook">
+          <img src="icons/facebook.png" alt="Facebook"> Facebook
+        </a>
+        <a href="https://instagram.com/khushgarg.in" target="_blank" class="btn instagram">
+          <img src="icons/instagram.png" alt="Instagram"> Instagram
+        </a>
+        <a href="https://x.com/gargkhush5" target="_blank" class="btn twitter">
+          <img src="icons/twitter.png" alt="Twitter"> X (Twitter)
+        </a>
+        <a href="https://linkedin.com/in/gargkhush5" target="_blank" class="btn linkedin">
+          <img src="icons/linkedin.png" alt="LinkedIn"> LinkedIn
+        </a>
+        <a href="https://github.com/gargkhush5" target="_blank" class="btn github">
+          <img src="icons/github.png" alt="GitHub"> GitHub
+        </a>
+      </div>
+      
+      <!-- Restricted content only visible to logged-in users -->
+      <div data-restricted="true" style="display: none; margin-top: 2rem; padding: 1rem; background: #f0f8ff; border-radius: 8px; border: 1px solid #004f90;">
+        <h3>Author-Only Information</h3>
+        <p>This content is only visible to logged-in authors. You can use this area to share private links or information that shouldn't be publicly visible.</p>
+        <ul style="margin-top: 1rem;">
+          <li><a href="#" style="color: #004f90;">Private Analytics Dashboard</a></li>
+          <li><a href="#" style="color: #004f90;">Content Management System</a></li>
+          <li><a href="#" style="color: #004f90;">Admin Email Access</a></li>
+        </ul>
+      </div>
+      </div>
+    </section>
+  </main>  <footer>
+    <p>&copy; 2025 Khush Garg</p>
+  </footer>
+
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script src="scripts/social-links.js"></script>
+  <script>
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('sidebar-active');
+    }
+
+    // Function to close sidebar
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.remove('active');
+      main.classList.remove('sidebar-active');
+    }
+
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        main.classList.remove('sidebar-active');
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('load', checkScreenWidth);
+    // Run when window is resized
+    window.addEventListener('resize', checkScreenWidth);
+  </script>
+</body>
+</html>

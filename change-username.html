@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Change Username - Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <style>    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      background-color: #f8f9fa;
+      display: flex !important;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh !important;
+      margin: 0;
+      padding: 20px;
+      flex-direction: row !important;
+    }
+    
+    /* Override any main styles from styles.css */
+    main {
+      margin-left: 0 !important;
+      padding: 0 !important;
+      flex: none !important;
+    }
+    .username-container {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .username-header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .username-header h1 {
+      color: #004f90;
+      margin: 0;
+      font-size: 1.8rem;
+    }
+    .username-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .form-group label {
+      font-weight: 500;
+      color: #333;
+      font-size: 0.95rem;
+    }
+    .form-group input {
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: border 0.2s;
+    }
+    .form-group input:focus {
+      border-color: #004f90;
+      outline: none;
+    }
+    .change-btn {
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.9rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 0.5rem;
+    }
+    .change-btn:hover {
+      background: #003b6d;
+    }
+    .back-link {
+      display: block;
+      text-align: center;
+      margin-top: 1.5rem;
+      color: #004f90;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .back-link:hover {
+      text-decoration: underline;
+    }
+    .success-message {
+      color: #27ae60;
+      font-size: 0.95rem;
+      background: #e9f7ef;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+    .error-message {
+      color: #e74c3c;
+      font-size: 0.95rem;
+      background: #fdedec;
+      padding: 0.8rem;
+      border-radius: 6px;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+    /* Dashboard button */
+    .dashboard-btn {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .dashboard-btn:hover {
+      background: #003b6d;
+    }
+  </style>
+</head>
+<body>
+  <a href="author-dashboard.html" class="dashboard-btn">← Back to Dashboard</a>
+  
+  <div class="username-container">
+    <div class="username-header">
+      <h1>Change Username</h1>
+      <p>Update your account username</p>
+    </div>
+    
+    <form class="username-form" id="usernameForm">
+      <div class="form-group">
+        <label for="currentUsername">Current Username</label>
+        <input type="text" id="currentUsername" name="currentUsername" readonly>
+      </div>
+      
+      <div class="form-group">
+        <label for="newUsername">New Username</label>
+        <input type="text" id="newUsername" name="newUsername" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Current Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      
+      <div class="success-message" id="successMessage">
+        Your username has been successfully changed.
+      </div>
+      
+      <div class="error-message" id="errorMessage">
+        Username change failed. Please check your inputs.
+      </div>
+      
+      <button type="button" class="change-btn" onclick="changeUsername()">Change Username</button>
+    </form>
+    
+    <a href="author-dashboard.html" class="back-link">Return to dashboard</a>
+  </div>  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82Pe71bNVmQFhThlZa_YWsrB7QwEAQaE",
+      authDomain: "khush-portfolio-23e8e.firebaseapp.com",
+      projectId: "khush-portfolio-23e8e",
+      storageBucket: "khush-portfolio-23e8e.firebasestorage.app",
+      messagingSenderId: "114583728382",
+      appId: "1:114583728382:web:ccc2c215f028b29d2275af"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+      // Hide page content immediately until authentication is verified
+    document.body.style.display = 'none';
+    
+    // FAST LOADING: Check localStorage immediately for quick access
+    const isLocallyAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLocallyAuthenticated) {
+      // Show page immediately if localStorage indicates user is logged in
+      document.body.style.display = 'block';
+      initializePage();
+      console.log('Change Username loaded instantly via localStorage');
+    }
+    
+    // Authentication state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Firebase confirms authentication
+        document.body.style.display = 'block';
+        initializePage();
+        console.log('Change Username verified via Firebase');
+      } else {
+        // No Firebase user, check localStorage fallback
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+          // Keep page visible for localStorage authenticated users
+          document.body.style.display = 'block';
+          initializePage();
+          console.log('Change Username using localStorage fallback');
+        } else {
+          // Not authenticated, redirect to login
+          console.log('No authentication found, redirecting to login');
+          window.location.href = 'author-login.html';
+        }
+      }
+    });
+    
+    // Initialize page functionality after authentication is confirmed
+    function initializePage() {
+      // Set current username in the form
+      document.getElementById('currentUsername').value = getCurrentUser();
+    }
+    
+    function changeUsername() {
+      const currentUsername = document.getElementById('currentUsername').value;
+      const newUsername = document.getElementById('newUsername').value;
+      const password = document.getElementById('password').value;
+      const successMessage = document.getElementById('successMessage');
+      const errorMessage = document.getElementById('errorMessage');
+      
+      // Hide previous messages
+      successMessage.style.display = 'none';
+      errorMessage.style.display = 'none';
+      
+      // Validation
+      if (!newUsername || newUsername.trim() === '') {
+        errorMessage.textContent = "Username cannot be empty";
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // Get users from localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      
+      // Check if username already exists
+      if (newUsername !== currentUsername && users.some(u => u.username === newUsername)) {
+        errorMessage.textContent = "This username is already taken";
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // Validate password
+      const currentUser = users.find(u => u.username === currentUsername);
+      
+      if (!currentUser || currentUser.password !== password) {
+        errorMessage.textContent = "Password is incorrect";
+        errorMessage.style.display = 'block';
+        return;
+      }
+      
+      // Update username
+      const updatedUsers = users.map(user => {
+        if (user.username === currentUsername) {
+          return { ...user, username: newUsername };
+        }
+        return user;
+      });
+      
+      // Save updated users
+      localStorage.setItem('users', JSON.stringify(updatedUsers));
+      
+      // Update current logged in user
+      localStorage.setItem('loggedInUser', newUsername);
+      
+      // Show success
+      successMessage.style.display = 'block';
+      
+      // Reset form
+      document.getElementById('newUsername').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('currentUsername').value = newUsername;
+      
+      // Redirect after delay
+      setTimeout(() => {
+        window.location.href = "author-dashboard.html";
+      }, 2000);
+    }
+    
+    // Allow form submission with Enter key
+    document.getElementById('password').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        changeUsername();
+      }
+    });
+  </script>
+</body>
+</html>

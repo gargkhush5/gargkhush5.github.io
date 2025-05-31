@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Resume - Khush Garg's Portfolio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <!-- Firebase SDK -->
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+  <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+  
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: #333;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+    }
+    .edit-container {
+      padding: 2rem;
+      margin-left: 200px;
+      max-width: 800px;
+    }
+    .edit-card {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 0.8rem;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-family: inherit;
+      transition: border 0.2s;
+      box-sizing: border-box;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: #004f90;
+      outline: none;
+    }
+    .form-group textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    .resume-upload-area {
+      border: 2px dashed #ddd;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      background: #f8f9fa;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+    .resume-upload-area.dragover {
+      border-color: #004f90;
+      background: #e8f4fd;
+    }
+    .current-resume {
+      background: white;
+      border: 2px solid #004f90;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .resume-icon {
+      font-size: 2rem;
+      color: #004f90;
+    }
+    .resume-info h4 {
+      margin: 0 0 0.3rem 0;
+      color: #004f90;
+    }
+    .resume-info p {
+      margin: 0;
+      color: #666;
+      font-size: 0.9rem;
+    }
+    .resume-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-left: auto;
+    }
+    .btn {
+      background: #004f90;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-right: 1rem;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #003b6d;
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+    }
+    .btn-danger {
+      background: #dc3545;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .success-message {
+      background: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .error-message {
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    .section-group {
+      background: #f8f9fa;
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .section-group h3 {
+      margin-top: 0;
+      color: #004f90;
+    }
+    .experience-item,
+    .education-item {
+      background: white;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+    }
+    .add-item-btn {
+      background: #28a745;
+      margin-top: 0.5rem;
+    }
+    .add-item-btn:hover {
+      background: #218838;
+    }
+    .remove-item-btn {
+      background: #dc3545;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.8rem;
+      float: right;
+    }
+    .remove-item-btn:hover {
+      background: #c82333;
+    }
+    @media (max-width: 768px) {
+      .edit-container {
+        margin-left: 0;
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebarToggle" class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <button id="sidebarClose" class="sidebar-close" onclick="closeSidebar()">✖</button>    <ul class="tabs">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="social.html">Social</a></li>
+      <li><a href="resume.html">Resume</a></li>
+      <li><a href="photos.html">Photos</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="author-dashboard.html">Dashboard</a></li>
+      <li><a href="#" data-action="logout" style="color: #dc3545; font-weight: 600;">Logout</a></li>
+    </ul>
+  </div>
+
+  <div class="edit-container">
+    <div class="edit-card">
+      <h1>Edit Resume</h1>
+      <p>Update your resume information and upload a new PDF version.</p>
+      
+      <div class="success-message" id="successMessage">
+        Resume updated successfully!
+      </div>
+      
+      <div class="error-message" id="errorMessage">
+        Error updating resume. Please try again.
+      </div>
+
+      <!-- Resume File Upload -->
+      <div class="section-group">
+        <h3>Resume PDF File</h3>
+        
+        <div id="currentResumeSection" style="display: none;">
+          <div class="current-resume">
+            <div class="resume-icon">📄</div>
+            <div class="resume-info">
+              <h4 id="currentResumeTitle">Current Resume</h4>
+              <p id="currentResumeDetails">Last updated: Never</p>
+            </div>
+            <div class="resume-actions">
+              <a id="viewResumeBtn" class="btn btn-small" target="_blank">View</a>
+              <button class="btn btn-small btn-danger" onclick="removeResume()">Remove</button>
+            </div>
+          </div>
+        </div>        <div class="resume-upload-area" id="resumeUploadArea">
+          <div>
+            <span style="font-size: 3rem; color: #ccc;">📄</span>
+            <h4>Upload New Resume (PDF)</h4>
+            <p>Drag and drop your resume PDF here, or click to select</p>
+            <input type="file" id="resumeFileInput" accept=".pdf" style="display: none;">
+            <button type="button" class="btn" onclick="document.getElementById('resumeFileInput').click()">Choose PDF File</button>
+            <button type="button" class="btn" id="submitResumeBtn" onclick="submitResumeFile()" style="margin-left: 1rem; background: #28a745; display: none;">Submit Resume</button>
+          </div>
+        </div>      </div>
+
+      <div style="margin-top: 2rem;">
+        <a href="author-dashboard.html" class="btn btn-secondary">Back to Dashboard</a>
+      </div>
+    </div>
+  </div>  <script src="scripts/auth.js"></script>
+  <script src="scripts/auth-ui.js"></script>
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyB82Pe71bNVmQFhThlZa_YWsrB7QwEAQaE",
+      authDomain: "khush-portfolio-23e8e.firebaseapp.com",
+      projectId: "khush-portfolio-23e8e",
+      storageBucket: "khush-portfolio-23e8e.firebasestorage.app",
+      messagingSenderId: "114583728382",
+      appId: "1:114583728382:web:ccc2c215f028b29d2275af"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+      // Hide page content immediately until authentication is verified
+    document.body.style.display = 'none';
+    
+    // FAST LOADING: Check localStorage immediately for quick access
+    const isLocallyAuthenticated = localStorage.getItem('isLoggedIn') === 'true';
+    
+    if (isLocallyAuthenticated) {
+      // Show page immediately if localStorage indicates user is logged in
+      document.body.style.display = 'block';
+      initializePage();
+      console.log('Edit Resume loaded instantly via localStorage');
+    }
+    
+    // Authentication state listener
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Firebase confirms authentication
+        document.body.style.display = 'block';
+        initializePage();
+        console.log('Edit Resume verified via Firebase');
+      } else {
+        // No Firebase user, check localStorage fallback
+        if (localStorage.getItem('isLoggedIn') === 'true') {
+          // Keep page visible for localStorage authenticated users
+          document.body.style.display = 'block';
+          initializePage();
+          console.log('Edit Resume using localStorage fallback');
+        } else {
+          // Not authenticated, redirect to login
+          console.log('No authentication found, redirecting to login');
+          window.location.href = 'author-login.html';
+        }
+      }
+    });
+
+    // Initialize page functionality after authentication is confirmed
+    function initializePage() {
+      checkCurrentResume();
+    }
+
+    // Load current resume file on page load
+    function checkCurrentResume() {
+      const resumeFile = JSON.parse(localStorage.getItem('resumeFile'));
+      const currentSection = document.getElementById('currentResumeSection');
+      
+      if (resumeFile) {
+        document.getElementById('currentResumeTitle').textContent = resumeFile.name;
+        document.getElementById('currentResumeDetails').textContent = 
+          `Last updated: ${new Date(resumeFile.lastModified).toLocaleDateString()}`;
+        document.getElementById('viewResumeBtn').href = resumeFile.data;
+        currentSection.style.display = 'block';
+      } else {
+        currentSection.style.display = 'none';
+      }
+    }
+
+    function removeResume() {
+      if (confirm('Are you sure you want to remove the current resume PDF?')) {
+        localStorage.removeItem('resumeFile');
+        checkCurrentResume();
+      }
+    }// Handle resume file upload
+    const resumeInput = document.getElementById('resumeFileInput');
+    const uploadArea = document.getElementById('resumeUploadArea');
+    const submitBtn = document.getElementById('submitResumeBtn');
+    let selectedFile = null;
+
+    resumeInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file && file.type === 'application/pdf') {
+        selectedFile = file;
+        submitBtn.style.display = 'inline-block';
+        submitBtn.textContent = `Submit: ${file.name}`;
+      } else {
+        alert('Please select a PDF file.');
+        selectedFile = null;
+        submitBtn.style.display = 'none';
+      }
+    });
+
+    function submitResumeFile() {
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const resumeFile = {
+            name: selectedFile.name,
+            data: e.target.result,
+            lastModified: new Date().toISOString()
+          };
+          localStorage.setItem('resumeFile', JSON.stringify(resumeFile));
+          checkCurrentResume();
+          
+          // Reset the file input and hide submit button
+          resumeInput.value = '';
+          selectedFile = null;
+          submitBtn.style.display = 'none';
+          
+          // Show success message
+          document.getElementById('successMessage').style.display = 'block';
+          document.getElementById('successMessage').textContent = 'Resume file uploaded successfully!';
+          document.getElementById('errorMessage').style.display = 'none';
+          
+          // Hide success message after 3 seconds
+          setTimeout(() => {
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('successMessage').textContent = 'Resume updated successfully!';
+          }, 3000);
+        };
+        reader.readAsDataURL(selectedFile);
+      }
+    }    // Drag and drop functionality
+    uploadArea.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      
+      const files = e.dataTransfer.files;
+      if (files[0] && files[0].type === 'application/pdf') {
+        selectedFile = files[0];
+        submitBtn.style.display = 'inline-block';
+        submitBtn.textContent = `Submit: ${files[0].name}`;
+        
+        // Create a new DataTransfer object and add our file to it
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(files[0]);
+        
+        // Set the file input's files property to our DataTransfer files list
+        resumeInput.files = dataTransfer.files;
+      } else {
+        alert('Please drop a PDF file.');
+      }
+    });
+
+    function checkCurrentResume() {
+      const resumeFile = JSON.parse(localStorage.getItem('resumeFile'));
+      const currentSection = document.getElementById('currentResumeSection');
+      
+      if (resumeFile) {
+        document.getElementById('currentResumeTitle').textContent = resumeFile.name;
+        document.getElementById('currentResumeDetails').textContent = 
+          `Last updated: ${new Date(resumeFile.lastModified).toLocaleDateString()}`;
+        document.getElementById('viewResumeBtn').href = resumeFile.data;
+        currentSection.style.display = 'block';
+      } else {
+        currentSection.style.display = 'none';
+      }
+    }
+
+    function removeResume() {
+      if (confirm('Are you sure you want to remove the current resume PDF?')) {
+        localStorage.removeItem('resumeFile');
+        checkCurrentResume();
+      }    }
+
+    // Sidebar functionality
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(0)';
+      sidebarClose.style.display = 'block';
+    }
+    
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const sidebarClose = document.getElementById('sidebarClose');
+      
+      sidebar.style.transform = 'translateX(-100%)';
+      sidebarClose.style.display = 'none';
+    }
+
+    function initSidebar() {
+      if (window.innerWidth <= 768) {
+        closeSidebar();
+      }
+    }
+    
+    window.addEventListener('load', () => {
+      initSidebar();
+      checkCurrentResume();
+    });    window.addEventListener('resize', initSidebar);
+  </script>
+
+  <!-- Logout functionality -->
+  <script type="module">
+    import { performLogout } from './scripts/logout.js';
+    
+    // Make logout available globally
+    window.logoutUser = performLogout;
+    
+    // Add click listener to logout buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      const logoutButtons = document.querySelectorAll('.logout-btn, [data-action="logout"]');
+      logoutButtons.forEach(button => {
+        button.addEventListener('click', performLogout);
+      });
+    });
+  </script>
+</body>
+</html>

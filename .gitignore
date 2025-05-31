@@ -1,0 +1,19 @@
+# Sensitive files - do not upload to GitHub
+.env
+config.js
+credentials.json
+
+# Personal notes backup (if any)
+notes-backup.json
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*.bak
