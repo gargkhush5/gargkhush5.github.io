@@ -348,10 +348,43 @@
         </div>
       </aside>
     </div>
-  </main>
-  <footer>
+  </main>  <footer>
     <p>&copy; 2025 Khush Garg</p>
   </footer>  <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
+  <script>
+    // Function to toggle sidebar
+    function toggleSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.toggle('active');
+      main.classList.toggle('sidebar-active');
+    }
+
+    // Function to close sidebar
+    function closeSidebar() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      sidebar.classList.remove('active');
+      main.classList.remove('sidebar-active');
+    }
+
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main');
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('active');
+        main.classList.remove('sidebar-active');
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
+      }
+    }
+
+    // Run on page load
+    window.addEventListener('load', checkScreenWidth);
+    // Run when window is resized
+    window.addEventListener('resize', checkScreenWidth);
+  </script>
 </body>
 </html>

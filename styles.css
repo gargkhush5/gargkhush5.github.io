@@ -193,11 +193,28 @@ nav ul.tabs a:hover {
     box-sizing: border-box;
     margin: 0 auto;
   }
-
   main.sidebar-active {
     /* Optionally, add a semi-transparent overlay to main when sidebar is open */
     pointer-events: none;
     filter: blur(2px);
+  }
+
+  /* Support for other main content containers */
+  .edit-container.sidebar-active,
+  .social-container.sidebar-active,
+  .dashboard-container.sidebar-active,
+  .notes-container.sidebar-active {
+    pointer-events: none;
+    filter: blur(2px);
+  }
+
+  /* Ensure all main content containers respond to mobile view */
+  .edit-container,
+  .social-container,
+  .dashboard-container,
+  .notes-container {
+    margin-left: 0 !important;
+    padding: 1rem !important;
   }
 
   .sidebar-close {

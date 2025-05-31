@@ -235,6 +235,7 @@
     </div>
   </div>  <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
+  <script src="scripts/sidebar.js"></script>
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
@@ -531,35 +532,10 @@
         
         return false;
       }
-    }
-
-    // Sidebar functionality
-    function toggleSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(0)';
-      sidebarClose.style.display = 'block';
-    }
-    
-    function closeSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(-100%)';
-      sidebarClose.style.display = 'none';
-    }
-
-    function initSidebar() {
-      if (window.innerWidth <= 768) {
-        closeSidebar();
-      }
-    }
-    
+    }    // Initialize on page load
     window.addEventListener('load', () => {
-      initSidebar();
       loadPhotosData();
-    });    window.addEventListener('resize', initSidebar);
+    });
   </script>
 </body>
 </html>

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes - Khush Garg's Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Notes - Khush Garg's Portfolio</title>  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon.png">
+  <script src="scripts/sidebar.js"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -646,22 +646,46 @@
       alert('Error: ' + error.message);
     }
   }
+    // Sidebar functionality
+  function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const main = document.querySelector('main') || document.querySelector('.notes-container');
+    sidebar.classList.toggle('active');
+    if (main) {
+      main.classList.toggle('sidebar-active');
+    }
+  }
   
+  function closeSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    const main = document.querySelector('main') || document.querySelector('.notes-container');
+    sidebar.classList.remove('active');
+    if (main) {
+      main.classList.remove('sidebar-active');
+    }
+  }
+
+  // Check screen width on load and resize
+  function checkScreenWidth() {
+    const sidebar = document.querySelector('.sidebar');
+    const main = document.querySelector('main') || document.querySelector('.notes-container');
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('active');
+      if (main) {
+        main.classList.remove('sidebar-active');
+      }
+    } else {
+      sidebar.classList.remove('active'); // Remove the active class on large screens
+    }
+  }
+
   // Set up event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    // Remove onclick attributes to prevent duplicate events
-    document.querySelectorAll('[onclick]').forEach(el => {
-      // Store the original onclick function if needed
-      const onclickValue = el.getAttribute('onclick');
-      // Remove the attribute
-      el.removeAttribute('onclick');
-    });
-    
-    // Add proper event listeners
+    // Add proper event listeners for notes
     document.querySelector('.add-note-btn').addEventListener('click', showModal);
     document.querySelector('.close-modal').addEventListener('click', closeModal);
     document.querySelector('.modal-btn.cancel').addEventListener('click', closeModal);
-    document.querySelector('.modal-btn.save').addEventListener('click', saveNote);
+    document.querySelector('.modal-btn.save').addEventListener('click', saveModal);
     
     // Add keyboard shortcuts
     document.addEventListener('keydown', (e) => {
@@ -676,11 +700,16 @@
     });
   });
   
-  // Remove global window functions to prevent duplicate calls
-  // Export only required functions for external access
+  // Initialize sidebar on page load
+  window.addEventListener('load', checkScreenWidth);
+  window.addEventListener('resize', checkScreenWidth);
+  
+  // Export required functions for external access
   window.showModal = showModal;
   window.closeModal = closeModal;
   window.saveNote = saveNote;
+  window.toggleSidebar = toggleSidebar;
+  window.closeSidebar = closeSidebar;
 </script>
 </body>
 </html>

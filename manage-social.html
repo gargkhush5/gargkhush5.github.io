@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Social Links - Khush Garg's Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Manage Social Links - Khush Garg's Portfolio</title>  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon.png">
+  <script src="scripts/sidebar.js"></script>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -164,7 +164,7 @@
       <li><a href="photos.html">Photos</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a href="author-dashboard.html">Dashboard</a></li>
-      <li><a href="#" data-action="logout" style="color: #dc3545; font-weight: 600;">Logout</a></li>
+      
     </ul>
   </div>
 
@@ -303,35 +303,13 @@
       // Hide the success message after 3 seconds
       setTimeout(() => {
         document.getElementById('successMessage').style.display = 'none';
-      }, 3000);
-    }
-    // Sidebar functionality
-    function toggleSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(0)';
-      sidebarClose.style.display = 'block';
-    }
-    
-    function closeSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(-100%)';
-      sidebarClose.style.display = 'none';
-    }
-
-    // For mobile devices - check if we need to initially hide the sidebar
-    function initSidebar() {
-      if (window.innerWidth <= 768) {
-        closeSidebar();
-      }
-    }
-    
-    // Initialize sidebar on page load
-    window.addEventListener('load', initSidebar);
-    window.addEventListener('resize', initSidebar);
+      }, 3000);    }
+    // Initialize the page
+    // The toggle sidebar functionality is now handled by sidebar.js    // Page initialization
+    window.addEventListener('load', () => {
+      loadSocialLinksForm(); // Load the social links
+    });
+    window.addEventListener('resize', checkScreenWidth);
   </script>
 </body>
 </html>

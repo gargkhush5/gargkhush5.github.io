@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Edit Resume - Khush Garg's Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Edit Resume - Khush Garg's Portfolio</title>  <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="favicon.png">
+  <script src="scripts/sidebar.js"></script>
   
   <!-- Firebase SDK -->
   <script type="module" src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
@@ -207,7 +207,6 @@
       <li><a href="photos.html">Photos</a></li>
       <li><a href="contact.html">Contact</a></li>
       <li><a href="author-dashboard.html">Dashboard</a></li>
-      <li><a href="#" data-action="logout" style="color: #dc3545; font-weight: 600;">Logout</a></li>
     </ul>
   </div>
 
@@ -435,35 +434,10 @@
       if (confirm('Are you sure you want to remove the current resume PDF?')) {
         localStorage.removeItem('resumeFile');
         checkCurrentResume();
-      }    }
-
-    // Sidebar functionality
-    function toggleSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(0)';
-      sidebarClose.style.display = 'block';
-    }
-    
-    function closeSidebar() {
-      const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(-100%)';
-      sidebarClose.style.display = 'none';
-    }
-
-    function initSidebar() {
-      if (window.innerWidth <= 768) {
-        closeSidebar();
-      }
-    }
-    
+      }    }    // Initialize on page load
     window.addEventListener('load', () => {
-      initSidebar();
       checkCurrentResume();
-    });    window.addEventListener('resize', initSidebar);
+    });
   </script>
 
   <!-- Logout functionality -->

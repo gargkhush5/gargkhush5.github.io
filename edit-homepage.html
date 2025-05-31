@@ -369,35 +369,44 @@
       setTimeout(() => {
         document.getElementById('successMessage').style.display = 'none';
       }, 3000);
-    });
-
-    // Sidebar functionality
-    function toggleSidebar() {
+    });    // Sidebar functionality
+    window.toggleSidebar = function() {
       const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(0)';
-      sidebarClose.style.display = 'block';
-    }
+      const main = document.querySelector('main') || document.querySelector('.edit-container');
+      sidebar.classList.toggle('active');
+      if (main) {
+        main.classList.toggle('sidebar-active');
+      }
+    };
     
-    function closeSidebar() {
+    window.closeSidebar = function() {
       const sidebar = document.querySelector('.sidebar');
-      const sidebarClose = document.getElementById('sidebarClose');
-      
-      sidebar.style.transform = 'translateX(-100%)';
-      sidebarClose.style.display = 'none';
-    }
+      const main = document.querySelector('main') || document.querySelector('.edit-container');
+      sidebar.classList.remove('active');
+      if (main) {
+        main.classList.remove('sidebar-active');
+      }
+    };
 
-    function initSidebar() {
+    // Check screen width on load and resize
+    function checkScreenWidth() {
+      const sidebar = document.querySelector('.sidebar');
+      const main = document.querySelector('main') || document.querySelector('.edit-container');
       if (window.innerWidth <= 768) {
-        closeSidebar();
+        sidebar.classList.remove('active');
+        if (main) {
+          main.classList.remove('sidebar-active');
+        }
+      } else {
+        sidebar.classList.remove('active'); // Remove the active class on large screens
       }
     }
     
     window.addEventListener('load', () => {
-      initSidebar();
+      checkScreenWidth();
       loadHomepageData();
-    });    window.addEventListener('resize', initSidebar);
+    });
+    window.addEventListener('resize', checkScreenWidth);
   </script>
 </body>
 </html>
