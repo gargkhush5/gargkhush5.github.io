@@ -51,34 +51,35 @@ function getCurrentUser() {
 
 // Logout function (Firebase first, then localStorage)
 async function logout() {
-  if (firebaseAuth) {
-    await firebaseAuth.firebaseSignOut();
-  }
-  
-  // Also clear localStorage for fallback compatibility
-  localStorage.removeItem('loggedInUser');
-  localStorage.setItem('isLoggedIn', 'false');
-  
-  // Redirect logic remains the same
-  const currentPage = window.location.pathname.split('/').pop();
-  const protectedPages = [
-    'author-dashboard.html', 
-    'notes.html', 
-    'change-password.html', 
-    'change-username.html', 
-    'manage-social.html',
-    'contacts.html'
-  ];
-  
-  if (protectedPages.includes(currentPage)) {
-    window.location.href = 'index.html';
-  } else {
-    if (typeof updateSidebarAuth === 'function') {
-      updateSidebarAuth();
+  try {
+    // Import and use the comprehensive logout function
+    const { performLogout } = await import('./logout.js');
+    return performLogout();
+  } catch (error) {
+    console.error('Error importing logout module:', error);
+    
+    // Fallback logout if import fails
+    if (firebaseAuth) {
+      await firebaseAuth.firebaseSignOut();
     }
-    if (typeof updateAuthUI === 'function') {
-      updateAuthUI();
-    }
+    
+    // Clear ALL localStorage data immediately
+    const keysToRemove = [
+      'isLoggedIn',
+      'loggedInUser', 
+      'username',
+      'userEmail',
+      'lastLoginTime'
+    ];
+    
+    keysToRemove.forEach(key => {
+      localStorage.removeItem(key);
+    });
+    
+    localStorage.setItem('isLoggedIn', 'false');
+    
+    // Force redirect
+    window.location.replace('author-login.html');
   }
 }
 
