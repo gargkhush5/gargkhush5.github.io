@@ -224,21 +224,43 @@
     const auth = getAuth(app);
     
     // Apply immediate page protection
-    document.body.style.display = 'none';
-
-    // Add logout function to clear all authentication data
+    document.body.style.display = 'none';    // Add logout function to clear all authentication data
     window.performLogout = async function() {
       try {
-        // Clear all auth data
-        await signOut(auth);
-        localStorage.removeItem('isLoggedIn');
-        localStorage.removeItem('username');
-        localStorage.removeItem('userEmail');
+        console.log('🚪 Performing immediate logout...');
         
-        // Redirect to login page
-        window.location.href = 'author-login.html';
+        // Clear Firebase auth
+        await signOut(auth);
+        
+        // Immediately clear ALL localStorage data
+        const keysToRemove = [
+          'isLoggedIn',
+          'loggedInUser', 
+          'username',
+          'userEmail',
+          'lastLoginTime',
+          'userNotes',
+          'homepageData',
+          'photosData',
+          'gallerySettings',
+          'resumeFile'
+        ];
+        
+        keysToRemove.forEach(key => {
+          localStorage.removeItem(key);
+        });
+        
+        localStorage.setItem('isLoggedIn', 'false');
+        
+        console.log('✅ All data cleared, redirecting...');
+        
+        // Force immediate redirect
+        window.location.replace('author-login.html');
+        
       } catch (error) {
         console.error('Logout error:', error);
+        // Force redirect even on error
+        window.location.replace('author-login.html');
       }
     };
 
@@ -251,27 +273,12 @@
       
       if (user) {
         // User is signed in with Firebase
-        document.body.style.display = 'block';
-      } else {
-        // Check localStorage fallback
-        const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-        
-        if (isLoggedIn) {
-          // Double-verify by checking if this is a stale localStorage value
-          const lastLoginTime = localStorage.getItem('lastLoginTime');
-          const currentTime = new Date().getTime();
-          const sessionTimeout = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-          
-          if (lastLoginTime && (currentTime - parseInt(lastLoginTime)) < sessionTimeout) {
-            document.body.style.display = 'block';
-          } else {
-            // Session expired or invalid
-            window.performLogout();
-          }
-        } else {
-          // Not logged in at all
-          window.location.href = 'author-login.html';
-        }
+        document.body.style.display = 'block';      } else {
+        // No Firebase user - immediately redirect to login
+        // Remove the localStorage fallback that was causing delayed logout
+        console.log('No Firebase user found, redirecting to login');
+        localStorage.setItem('isLoggedIn', 'false');
+        window.location.replace('author-login.html');
       }
     });
       // Sidebar functionality
