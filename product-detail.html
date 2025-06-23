@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Detail - MNIT Resale</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="google-signin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <!-- Desktop Structure (original) -->
+            <div class="logo">
+                <h1><i class="fas fa-exchange-alt"></i> MNIT Resale</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="my-items.html" class="nav-link" id="myItemsNavLink" style="display: none;">My Items</a></li>
+                    <li><a href="#" class="nav-link" id="sellNavLink" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
+                    <li class="auth-section">
+                        <button id="loginBtn" class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+                        <button id="signupBtn" class="btn btn-primary" onclick="showModal('signupModal')">Sign Up</button>
+                        <div id="userMenu" class="user-menu hidden">
+                            <span id="userName" class="user-name"></span>
+                            <div class="dropdown">
+                                <button class="dropdown-btn"><i class="fas fa-chevron-down"></i></button>
+                                <div class="dropdown-content">
+                                    <a href="my-items.html" id="myItemsBtn"><i class="fas fa-list"></i> My Items</a>
+                                    <a href="wishlist.html" id="wishlistBtn"><i class="fas fa-heart"></i> Wishlist</a>
+                                    <a href="#" id="addItemBtn" onclick="showModal('addItemModal')"><i class="fas fa-plus"></i> Add Item</a>
+                                    <a href="profile.html" id="profileBtn"><i class="fas fa-user"></i> Profile</a>
+                                    <a href="#" id="logoutBtn" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Structure (only shown on mobile) -->
+            <div class="header-top">
+                <div class="logo">
+                    <h1><i class="fas fa-exchange-alt"></i> MNIT Resale</h1>
+                </div>
+                <div class="auth-section">
+                    <button id="loginBtnMobile" class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+                    <button id="signupBtnMobile" class="btn btn-primary" onclick="showModal('signupModal')">Sign Up</button>
+                    <div id="userMenuMobile" class="user-menu hidden">
+                        <span id="userNameMobile" class="user-name"></span>
+                        <div class="dropdown">
+                            <button class="dropdown-btn"><i class="fas fa-chevron-down"></i></button>
+                            <div class="dropdown-content">
+                                <a href="my-items.html" id="myItemsBtnMobile"><i class="fas fa-list"></i> My Items</a>
+                                <a href="wishlist.html" id="wishlistBtnMobile"><i class="fas fa-heart"></i> Wishlist</a>
+                                <a href="#" id="addItemBtnMobile" onclick="showModal('addItemModal')"><i class="fas fa-plus"></i> Add Item</a>
+                                <a href="profile.html" id="profileBtnMobile"><i class="fas fa-user"></i> Profile</a>
+                                <a href="#" id="logoutBtnMobile" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation Tabs -->
+            <nav class="nav-tabs-mobile">
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="my-items.html" class="nav-link" id="myItemsNavLinkMobile" style="display: none;">My Items</a></li>
+                    <li><a href="#" class="nav-link" id="sellNavLinkMobile" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="product-detail-section">
+            <div class="container">                <div class="section-header">
+                    <a href="javascript:history.back()" class="btn btn-outline back-btn">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                </div>
+                
+                <div id="product-detail-container">
+                    <!-- Product details will be loaded here -->
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading product details...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-exchange-alt"></i> MNIT Resale</h3>
+                    <p>A trusted marketplace for MNIT students to buy and sell items safely within the campus community.</p>
+                </div>
+                  <div class="footer-links">
+                    <a href="https://www.mnit.ac.in/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-university"></i> About MNIT
+                    </a>
+                    <a href="https://khush.engineer/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-user-tie"></i> About Developer
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MNIT Resale. Made for MNIT Students, by MNIT Students.</p>
+            </div>
+        </div>    </footer>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('loginModal')">&times;</span>
+            <h3>Login to MNIT Resale</h3>
+            <form id="loginForm" onsubmit="handleLogin(event); return false;">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                    <span class="error-message"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            
+            <!-- Google Sign-In -->
+            <div class="social-login">
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                <button type="button" id="googleLoginBtn" class="btn btn-google btn-full">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+            </div>
+            
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" id="switchToSignup" onclick="hideModal('loginModal'); showModal('signupModal'); return false;">Sign up</a></p>
+                <p><a href="#" id="forgotPasswordLink" onclick="hideModal('loginModal'); showModal('forgotPasswordModal'); return false;">Forgot Password?</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('signupModal')">&times;</span>
+            <h3>Join MNIT Resale</h3>
+            <form id="signupForm" onsubmit="handleSignup(event); return false;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupDob">Date of Birth</label>
+                    <input type="date" id="signupDob" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupMobile">Mobile Number</label>
+                    <input type="tel" id="signupMobile" pattern="[0-9]{10}" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupAddress">Address</label>
+                    <textarea id="signupAddress" rows="3" placeholder="Your current address" required></textarea>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhoto">Profile Photo (Optional)</label>
+                    <input type="file" id="signupPhoto" accept="image/*">
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                    <span class="error-message"></span>
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                    <span class="error-message"></span>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+            
+            <!-- Google Sign-In -->
+            <div class="social-login">
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                <button type="button" id="googleSignupBtn" class="btn btn-google btn-full">
+                    <i class="fab fa-google"></i> Sign up with Google
+                </button>
+            </div>
+            
+            <div class="modal-footer">
+                <p>Already have an account? <a href="#" id="switchToLogin" onclick="hideModal('signupModal'); showModal('loginModal'); return false;">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Item Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('addItemModal')">&times;</span>
+            <h3>Add New Item</h3>
+            <form id="addItemForm" onsubmit="handleAddItem(event); return false;">
+                <div class="form-group">
+                    <label for="itemTitle">Item Title</label>
+                    <input type="text" id="itemTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemCategory">Category</label>
+                    <select id="itemCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="cooler">Cooler</option>
+                        <option value="cycle">Cycle</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="pc">PC & Laptop</option>
+                        <option value="study">Study Material</option>
+                        <option value="sports">Sports</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemCondition">Condition</label>
+                    <select id="itemCondition" required>
+                        <option value="">Select Condition</option>
+                        <option value="New">New</option>
+                        <option value="Like New">Like New</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Poor">Poor</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Price (₹)</label>
+                    <input type="number" id="itemPrice" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">Description</label>
+                    <textarea id="itemDescription" rows="4" placeholder="Describe your item..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="itemImage">Item Photo</label>
+                    <input type="file" id="itemImage" accept="image/*" required>
+                    <small>Please upload a clear photo of your item</small>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Add Item</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+    
+    <!-- App Scripts -->
+    <script src="firebase-config.js"></script>
+    <script src="firebase-service.js"></script>
+    <script src="cloudinary-service.js"></script>
+    <script src="fast-auth.js"></script>
+    <script src="common.js"></script>
+    <script src="product-details.js"></script>
+</body>
+</html>

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MNIT Resale - Buy & Sell Platform for MNIT Students</title>    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    <title>Available Items - MNIT Resale</title>
+    
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
@@ -12,9 +13,9 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="google-signin.css">
     <link rel="stylesheet" href="spinner.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>    <!-- Header Navigation -->
+<body>    <!-- Header -->
     <header class="header">
         <div class="container">
             <!-- Desktop Structure (original) -->
@@ -23,8 +24,8 @@
             </div>
             <nav class="nav">
                 <ul>
-                    <li><a href="index.html" class="nav-link active">Home</a></li>
-                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link active">Browse Items</a></li>
                     <li><a href="my-items.html" class="nav-link" id="myItemsNavLink" style="display: none;">My Items</a></li>
                     <li><a href="#" class="nav-link" id="sellNavLink" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
                     <li class="auth-section">
@@ -74,65 +75,86 @@
             <!-- Mobile Navigation Tabs -->
             <nav class="nav-tabs-mobile">
                 <ul>
-                    <li><a href="index.html" class="nav-link active">Home</a></li>
-                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link active">Browse Items</a></li>
                     <li><a href="my-items.html" class="nav-link" id="myItemsNavLinkMobile" style="display: none;">My Items</a></li>
                     <li><a href="#" class="nav-link" id="sellNavLinkMobile" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
                 </ul>
             </nav>
-        </div>
-    </header>
+        </div></header>
 
     <main>
-        <!-- Home Section -->
-        <div id="home" class="home-section">
-        <section class="hero">
+        <!-- Products Section -->
+        <section class="products">
             <div class="container">
-                <div class="hero-content">
-                    <h2>Buy & Sell with Fellow MNIT Students</h2>
-                    <p>Find great deals on cycles, coolers, mobiles, and more from your fellow MNITians</p>                    <div class="hero-actions">
-                        <button class="btn btn-primary btn-large" id="heroSignupBtn" onclick="showModal('signupModal')">Get Started</button>
+                <div class="section-header">
+                    <a href="index.html" class="btn btn-outline back-btn">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+                <div class="products-header">
+                    <h3>Available Items</h3>
+                    <div class="filters">                        <select id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="cooler">Coolers</option>
+                            <option value="cycle">Cycles</option>
+                            <option value="mobile">Mobiles</option>
+                            <option value="pc">PCs & Laptops</option>
+                            <option value="study">Study Material</option>
+                            <option value="sports">Sports</option>
+                            <option value="others">Others</option>
+                        </select>
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Search items...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                    </div>
+                </div>                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>                <!-- Pagination Controls -->
+                <div class="pagination-container" id="paginationContainer" style="display: none;">
+                    <div class="pagination-info">
+                        <span id="paginationInfo">Showing 1-30 of 100 items</span>
+                    </div>
+                    <div class="pagination">
+                        <button class="pagination-btn" id="prevBtn" onclick="changePage(-1)">
+                            <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <div class="pagination-numbers" id="paginationNumbers">
+                            <!-- Page numbers will be generated here -->
+                        </div>
+                        <button class="pagination-btn" id="nextBtn" onclick="changePage(1)">
+                            Next <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </section>
-
-        <!-- Categories Section -->
-        <section class="categories">
-            <div class="container">
-                <h3>Browse by Category</h3>                <div class="category-grid">
-                    <div class="category-card" onclick="window.location.href='products.html'">
-                        <i class="fas fa-th-large"></i>
-                        <h4>All Items</h4>
-                    </div>
-                    <div class="category-card" onclick="window.location.href='products.html?category=cooler'">
-                        <i class="fas fa-fan"></i>
-                        <h4>Coolers</h4>
-                    </div>
-                    <div class="category-card" onclick="window.location.href='products.html?category=cycle'">
-                        <i class="fas fa-bicycle"></i>
-                        <h4>Cycles</h4>
-                    </div>                    <div class="category-card" onclick="window.location.href='products.html?category=mobile'">
-                        <i class="fas fa-mobile-alt"></i>
-                        <h4>Mobiles</h4>
-                    </div>
-                    <div class="category-card" onclick="window.location.href='products.html?category=pc'">
-                        <i class="fas fa-desktop"></i>
-                        <h4>PCs & Laptops</h4>
-                    </div>                    <div class="category-card" onclick="window.location.href='products.html?category=study'">
-                        <i class="fas fa-book"></i>
-                        <h4>Study Material</h4>
-                    </div><div class="category-card" onclick="window.location.href='products.html?category=sports'">
-                        <i class="fas fa-futbol"></i>
-                        <h4>Sports</h4>
-                    </div>
-                    <div class="category-card" onclick="window.location.href='products.html?category=others'">
-                        <i class="fas fa-ellipsis-h"></i>
-                        <h4>Others</h4>
-                    </div>
+    </main><!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-exchange-alt"></i> MNIT Resale</h3>
+                    <p>A trusted marketplace for MNIT students to buy and sell items safely within the campus community.</p>
                 </div>
-            </div>        </section>
-    </div>    <!-- Login Modal -->
+                  <div class="footer-links">
+                    <a href="https://www.mnit.ac.in/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-university"></i> About MNIT
+                    </a>
+                    <a href="https://khush.engineer/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-user-tie"></i> About Developer
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MNIT Resale. Made for MNIT Students, by MNIT Students.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- All Modals -->    <!-- Login Modal -->
     <div id="loginModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="hideModal('loginModal')">&times;</span>
@@ -146,7 +168,8 @@
                     <label for="loginPassword">Password</label>
                     <input type="password" id="loginPassword" required>
                     <span class="error-message"></span>
-                </div>                <button type="submit" class="btn btn-primary btn-full">Login</button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Login</button>
             </form>
             
             <!-- Google Sign-In -->
@@ -159,11 +182,12 @@
                 </button>
             </div>
             
-            <div class="modal-footer"><p>Don't have an account? <a href="#" id="switchToSignup" onclick="hideModal('loginModal'); showModal('signupModal'); return false;">Sign up</a></p>
+            <div class="modal-footer">
+                <p>Don't have an account? <a href="#" id="switchToSignup" onclick="hideModal('loginModal'); showModal('signupModal'); return false;">Sign up</a></p>
                 <p><a href="#" id="forgotPasswordLink" onclick="hideModal('loginModal'); showModal('forgotPasswordModal'); return false;">Forgot Password?</a></p>
             </div>
         </div>
-    </div>    <!-- Signup Modal -->
+    </div><!-- Signup Modal -->
     <div id="signupModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="hideModal('signupModal')">&times;</span>
@@ -185,28 +209,30 @@
                 </div>
                 <div class="form-group">
                     <label for="signupMobile">Mobile Number</label>
-                    <input type="tel" id="signupMobile" pattern="[0-9]{10}" required>
+                    <input type="tel" id="signupMobile" name="mobile" pattern="[0-9]{10}" required>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="signupAddress">Address</label>
-                    <textarea id="signupAddress" rows="3" placeholder="Your current address" required></textarea>
+                    <textarea id="signupAddress" name="address" rows="3" placeholder="Your current address" required></textarea>
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="signupPhoto">Profile Photo (Optional)</label>
-                    <input type="file" id="signupPhoto" accept="image/*">
+                    <input type="file" id="signupPhoto" name="photo" accept="image/*">
                     <span class="error-message"></span>
                 </div>
                 <div class="form-group">
                     <label for="signupPassword">Password</label>
-                    <input type="password" id="signupPassword" required>
+                    <input type="password" id="signupPassword" name="password" required>
                     <span class="error-message"></span>
-                </div>                <div class="form-group">
+                </div>
+                <div class="form-group">
                     <label for="signupConfirmPassword">Confirm Password</label>
-                    <input type="password" id="signupConfirmPassword" required>
+                    <input type="password" id="signupConfirmPassword" name="confirmPassword" required>
                     <span class="error-message"></span>
-                </div>                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
             </form>
             
             <!-- Google Sign-In -->
@@ -219,79 +245,9 @@
                 </button>
             </div>
             
-            <p class="modal-footer">Already have an account? <a href="#" id="switchToLogin" onclick="hideModal('signupModal'); showModal('loginModal'); return false;">Login</a></p></div>
-    </div>    <!-- Email Verification Modal -->    <div id="emailVerificationModal" class="modal">
-        <div class="modal-content">
-            <h3><i class="fas fa-envelope-check"></i> Verify Your Email</h3>
-            
-            <!-- <span class="close" onclick="hideModal('emailVerificationModal')">&times;</span> -->
-            
-            <div class="verification-content">
-                <div class="verification-message">
-                    <p>We've sent a verification email to:</p>
-                    <p><span class="email-highlight" id="verificationEmailDisplay"></span></p>
-                    <p>Please check your inbox and click the verification link to activate your account.</p>
-                </div>
-                
-                <div class="verification-steps">
-                    <div class="step">
-                        <i class="fas fa-envelope"></i>
-                        <span>Check your email inbox</span>
-                    </div>
-                    <div class="step">
-                        <i class="fas fa-mouse-pointer"></i>
-                        <span>Click the verification link</span>
-                    </div>
-                    <div class="step">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Come back and login</span>
-                    </div>
-                </div>
-                
-                <div class="verification-actions">
-                    <button type="button" id="checkVerificationBtn" class="btn btn-primary btn-full">
-                        <i class="fas fa-refresh"></i> I've verified, let me login
-                    </button>
-                    
-                    <button type="button" id="resendVerificationBtn" class="btn btn-outline btn-full">
-                        <i class="fas fa-paper-plane"></i> Resend Verification Email
-                    </button>
-                    
-                    <button type="button" id="changeEmailBtn" class="btn btn-link">
-                        <i class="fas fa-edit"></i> Wrong email? Change it
-                    </button>
-                </div>
-                
-                <div class="verification-note">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong>Can't find the email?</strong> Check your spam/junk folder. 
-                        If it's still not there, you can resend the verification email.
-                    </div>
-                </div>
-            </div>        </div>
-    </div>
-
-    <!-- Change Email Modal -->
-    <div id="changeEmailModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('changeEmailModal')">&times;</span>
-            <h3><i class="fas fa-edit"></i> Change Email Address</h3>
-            
-            <form id="changeEmailForm">
-                <div class="form-group">
-                    <label for="newEmail">New Email Address</label>
-                    <input type="email" id="newEmail" required>
-                    <span class="error-message"></span>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-full">Update & Send Verification</button>
-                <button type="button" class="btn btn-outline btn-full" onclick="hideModal('changeEmailModal'); showModal('emailVerificationModal');">Cancel</button>
-            </form>
+            <p class="modal-footer">Already have an account? <a href="#" id="switchToLogin" onclick="hideModal('signupModal'); showModal('loginModal'); return false;">Login</a></p>
         </div>
-    </div>
-
-    <!-- Forgot Password Modal -->
+    </div><!-- Forgot Password Modal -->
     <div id="forgotPasswordModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="hideModal('forgotPasswordModal')">&times;</span>
@@ -307,13 +263,12 @@
                 </form>
                 <p class="modal-footer">Remember your password? <a href="#" id="backToLogin">Back to Login</a></p>
             </div>
-              <div id="forgotPasswordStep2" class="hidden">
+            
+            <div id="forgotPasswordStep2" class="hidden">
                 <div class="success-message">
                     <i class="fas fa-envelope-circle-check"></i>
                     <h4>Reset Link Sent!</h4>
-                    <p>We've sent a password reset link to:</p>
-                    <p class="email-display"></p>
-                    <p>Please check your inbox and follow the instructions to reset your password.</p>
+                    <p>We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.</p>
                     <p class="email-note">If you don't see the email, please check your spam folder.</p>
                 </div>
                 <div class="reset-actions">
@@ -325,12 +280,15 @@
     </div>    <!-- Add Item Modal -->
     <div id="addItemModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="hideModal('addItemModal')">&times;</span>            <h3>Add New Item</h3>            <form id="addItemForm" onsubmit="handleAddItem(event); return false;">
+            <span class="close" onclick="hideModal('addItemModal')">&times;</span>
+            <h3>Add New Item</h3>
+            <form id="addItemForm" onsubmit="handleAddItem(event); return false;">
                 <div class="form-group">
                     <label for="itemTitle">Item Title</label>
                     <input type="text" id="itemTitle" required>
-                </div>
-                <div class="form-group">                    <label for="itemCategory">Category</label>                    <select id="itemCategory" required>
+                </div>                <div class="form-group">
+                    <label for="itemCategory">Category</label>
+                    <select id="itemCategory" required>
                         <option value="">Select Category</option>
                         <option value="cooler">Cooler</option>
                         <option value="cycle">Cycle</option>
@@ -342,22 +300,22 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="itemDescription">Description</label>
-                    <textarea id="itemDescription" rows="4" required></textarea>
-                </div>
-                <div class="form-group">
                     <label for="itemPrice">Price (₹)</label>
-                    <input type="number" id="itemPrice" min="1" required>
+                    <input type="number" id="itemPrice" required>
                 </div>
                 <div class="form-group">
                     <label for="itemCondition">Condition</label>
                     <select id="itemCondition" required>
                         <option value="">Select Condition</option>
-                        <option value="Like New">Like New</option>
-                        <option value="Excellent">Excellent</option>
-                        <option value="Good">Good</option>
-                        <option value="Fair">Fair</option>
+                        <option value="new">New</option>
+                        <option value="like-new">Like New</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">Description</label>
+                    <textarea id="itemDescription" rows="4" required></textarea>
                 </div>                <div class="form-group">
                     <label for="itemImage">Item Photo</label>
                     <input type="file" id="itemImage" accept="image/*">
@@ -367,52 +325,7 @@
                 </button>
             </form>
         </div>
-    </div>    <!-- Item Detail Modal -->
-    <div id="itemDetailModal" class="modal">
-        <div class="modal-content modal-large">
-            <span class="close" onclick="hideModal('itemDetailModal')">&times;</span>
-            <div id="itemDetailContent">
-                <!-- Content will be dynamically loaded -->
-            </div>
-        </div>
-    </div>    <!-- My Items Section -->
-    <section id="myItems" class="my-items hidden">
-        <div class="container">
-            <div class="section-header">
-                <button class="btn btn-outline back-btn" onclick="showSection('home')">
-                    <i class="fas fa-arrow-left"></i> Back to Home
-                </button>
-            </div>
-            <h3>My Items</h3>
-            <div id="myItemsGrid" class="products-grid">
-                <!-- User's items will be displayed here -->
-            </div>        </div>
-    </section>    </main>
-    
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3><i class="fas fa-exchange-alt"></i> MNIT Resale</h3>
-                    <p>A trusted marketplace for MNIT students to buy and sell items safely within the campus community.</p>
-                </div>
-                
-                <div class="footer-links">
-                    <a href="https://www.mnit.ac.in/" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-university"></i> About MNIT
-                    </a>
-                    <a href="https://khush.engineer/" target="_blank" rel="noopener noreferrer">
-                        <i class="fas fa-user-tie"></i> About Developer
-                    </a>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 MNIT Resale. Made for MNIT Students, by MNIT Students.</p>
-            </div>
-        </div>
-    </footer>
+    </div>
 
     <!-- Delete Confirmation Modal -->
     <div id="deleteConfirmModal" class="modal">
@@ -478,48 +391,26 @@
                 <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
             </form>
         </div>
-    </div>    <!-- Edit Profile Modal -->
-    <div id="editProfileModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="hideModal('editProfileModal')">&times;</span>
-            <h3>Edit Profile</h3>            <form id="editProfileForm">
-                <div class="form-group">
-                    <label for="editName">Full Name</label>
-                    <input type="text" id="editName" required>
-                </div>
-                <div class="form-group">
-                    <label for="editEmail">Email Address</label>
-                    <input type="email" id="editEmail" required>
-                </div>
-                <div class="form-group">
-                    <label for="editMobile">Mobile Number</label>
-                    <input type="tel" id="editMobile" required>
-                </div>
-                <div class="form-group">
-                    <label for="editDob">Date of Birth</label>
-                    <input type="date" id="editDob" required>
-                </div>
-                <div class="form-group">
-                    <label for="editAddress">Address</label>
-                    <textarea id="editAddress" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary btn-full">Save Changes</button>
-            </form>
+    </div>    <!-- Item Detail Modal -->
+    <div id="itemDetailModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="hideModal('itemDetailModal')">&times;</span>
+            <div id="itemDetailContent">
+                <!-- Content will be dynamically loaded -->
+            </div>
         </div>
     </div>    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     
-    <!-- Add Firebase products that you want to use -->    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>    <!-- Initialize Firebase -->
     <script src="firebase-config.js"></script>
-    
-    <!-- Cloudinary Image Service -->
-    <script src="cloudinary-service.js"></script>
-      <!-- Main Scripts -->
     <script src="firebase-service.js"></script>
+    <script src="cloudinary-service.js"></script>
     <script src="fast-auth.js"></script>
     <script src="common.js"></script>
-    <script src="script.js"></script>
+    <script src="products.js"></script>
 </body>
 </html>

@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - MNIT Resale</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="google-signin.css">
+    <link rel="stylesheet" href="spinner.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <!-- Desktop Structure (original) -->
+            <div class="logo">
+                <h1><i class="fas fa-exchange-alt"></i> MNIT Resale</h1>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="my-items.html" class="nav-link" id="myItemsNavLink" style="display: none;">My Items</a></li>
+                    <li><a href="wishlist.html" class="nav-link" id="wishlistNavLink" style="display: none;"><i class="fas fa-heart"></i> Wishlist <span id="wishlistCount" class="count-badge">0</span></a></li>
+                    <li><a href="#" class="nav-link" id="sellNavLink" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
+                    <li class="auth-section">
+                        <button id="loginBtn" class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+                        <button id="signupBtn" class="btn btn-primary" onclick="showModal('signupModal')">Sign Up</button>
+                        <div id="userMenu" class="user-menu hidden">
+                            <span id="userName" class="user-name"></span>
+                            <div class="dropdown">
+                                <button class="dropdown-btn"><i class="fas fa-chevron-down"></i></button>
+                                <div class="dropdown-content">
+                                    <a href="my-items.html" id="myItemsBtn"><i class="fas fa-list"></i> My Items</a>
+                                    <a href="wishlist.html" id="wishlistBtn"><i class="fas fa-heart"></i> Wishlist</a>
+                                    <a href="#" id="addItemBtn" onclick="showModal('addItemModal')"><i class="fas fa-plus"></i> Add Item</a>
+                                    <a href="profile.html" id="profileBtn"><i class="fas fa-user"></i> Profile</a>
+                                    <a href="#" id="logoutBtn" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Structure (only shown on mobile) -->
+            <div class="header-top">
+                <div class="logo">
+                    <h1><i class="fas fa-exchange-alt"></i> MNIT Resale</h1>
+                </div>
+                <div class="auth-section">
+                    <button id="loginBtnMobile" class="btn btn-outline" onclick="showModal('loginModal')">Login</button>
+                    <button id="signupBtnMobile" class="btn btn-primary" onclick="showModal('signupModal')">Sign Up</button>
+                    <div id="userMenuMobile" class="user-menu hidden">
+                        <span id="userNameMobile" class="user-name"></span>
+                        <div class="dropdown">
+                            <button class="dropdown-btn"><i class="fas fa-chevron-down"></i></button>
+                            <div class="dropdown-content">
+                                <a href="my-items.html" id="myItemsBtnMobile"><i class="fas fa-list"></i> My Items</a>
+                                <a href="wishlist.html" id="wishlistBtnMobile"><i class="fas fa-heart"></i> Wishlist</a>
+                                <a href="#" id="addItemBtnMobile" onclick="showModal('addItemModal')"><i class="fas fa-plus"></i> Add Item</a>
+                                <a href="profile.html" id="profileBtnMobile"><i class="fas fa-user"></i> Profile</a>
+                                <a href="#" id="logoutBtnMobile" onclick="handleLogout(); return false;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Mobile Navigation Tabs -->
+            <nav class="nav-tabs-mobile">
+                <ul>
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Browse Items</a></li>
+                    <li><a href="my-items.html" class="nav-link" id="myItemsNavLinkMobile" style="display: none;">My Items</a></li>
+                    <li><a href="wishlist.html" class="nav-link" id="wishlistNavLinkMobile" style="display: none;"><i class="fas fa-heart"></i> Wishlist</a></li>
+                    <li><a href="#" class="nav-link" id="sellNavLinkMobile" onclick="showModal('addItemModal')" style="display: none;"><i class="fas fa-plus"></i> Sell</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Profile Section -->
+        <section class="profile">
+            <div class="container">
+                <div class="section-header">
+                    <button class="btn btn-outline back-btn" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                </div>
+                  <div class="profile-container">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <img id="profileImage" src="" alt="Profile Photo" style="display: none;">
+                            <div id="profileImagePlaceholder" class="profile-placeholder">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="avatar-overlay">
+                                <button class="change-photo-btn" onclick="triggerPhotoUpload()" title="Change Profile Photo">
+                                    <i class="fas fa-camera"></i>
+                                </button>
+                            </div>
+                            <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;" onchange="handleProfilePhotoChange(event)">
+                        </div>
+                        <div class="profile-info">
+                            <div class="profile-title">
+                                <h2 id="profileName">Loading...</h2>
+                                <p class="profile-subtitle">Community Member</p>
+                            </div>
+                            <div class="profile-badge" id="profileBadge">
+                                <i class="fas fa-shield-check" id="profileBadgeIcon"></i>
+                                <span id="profileBadgeText">Verified User</span>
+                            </div>
+                        </div>
+                    </div>                    <div class="profile-content">
+                        <!-- Personal Information Card -->
+                        <div class="profile-main">
+                            <div class="profile-card">                                <div class="card-header">
+                                    <h4><i class="fas fa-user-circle"></i> Personal Information</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-list">
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="info-content">
+                                                <div class="info-label">Full Name</div>
+                                                <div class="info-value" id="profileNameField">Loading...</div>
+                                            </div>
+                                            <div class="info-actions">
+                                                <button class="btn btn-outline btn-sm edit-field-btn" onclick="editField('name')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                          <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-envelope"></i>
+                                            </div>
+                                            <div class="info-content">
+                                                <div class="info-label">Email Address</div>
+                                                <div class="info-value" id="profileEmail">Loading...</div>
+                                                <span id="emailVerificationBadge" class="verification-badge not-verified" style="display: none;">
+                                                    <i class="fas fa-times-circle"></i> Not Verified
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-phone"></i>
+                                            </div>
+                                            <div class="info-content">
+                                                <div class="info-label">Mobile Number</div>
+                                                <div class="info-value" id="profileMobile">Not provided</div>
+                                            </div>
+                                            <div class="info-actions">
+                                                <button class="btn btn-outline btn-sm edit-field-btn" onclick="editField('mobile')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-birthday-cake"></i>
+                                            </div>
+                                            <div class="info-content">
+                                                <div class="info-label">Date of Birth</div>
+                                                <div class="info-value" id="profileDob">Not provided</div>
+                                            </div>
+                                            <div class="info-actions">
+                                                <button class="btn btn-outline btn-sm edit-field-btn" onclick="editField('dob')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="info-item">
+                                            <div class="info-icon">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="info-content">
+                                                <div class="info-label">Address</div>
+                                                <div class="info-value" id="profileAddress">Not provided</div>
+                                            </div>
+                                            <div class="info-actions">
+                                                <button class="btn btn-outline btn-sm edit-field-btn" onclick="editField('address')">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Account Statistics Sidebar -->
+                        <div class="profile-sidebar">
+                            <div class="profile-stats-section">
+                                <h4><i class="fas fa-chart-bar"></i> Account Statistics</h4>
+                                <div class="profile-stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-number" id="totalItems">0</div>
+                                            <div class="stat-label">Items Listed</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-calendar"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-number" id="memberSince">2025</div>
+                                            <div class="stat-label">Member Since</div>
+                                        </div>
+                                    </div>
+                                      <div class="stat-card">
+                                        <div class="stat-icon">
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <div class="stat-number">5.0</div>
+                                            <div class="stat-label">Rating</div>
+                                        </div>
+                                    </div>                                </div>
+                            </div>
+                            
+
+                            <!-- Delete Account Section -->
+                            <div class="delete-account-section">
+                                <div class="danger-zone">
+                                    <h4><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+                                    <p>Once you delete your account, there is no going back. Please be certain.</p>
+                                    <button class="btn btn-danger btn-delete-account" onclick="showModal('deleteAccountModal')">
+                                        <i class="fas fa-trash-alt"></i> Delete Account
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section></main>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3><i class="fas fa-exchange-alt"></i> MNIT Resale</h3>
+                    <p>A trusted marketplace for MNIT students to buy and sell items safely within the campus community.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <a href="https://www.mnit.ac.in/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-university"></i> About MNIT
+                    </a>
+                    <a href="https://khush.engineer/" target="_blank" rel="noopener noreferrer">
+                        <i class="fas fa-user-tie"></i> About Developer
+                    </a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MNIT Resale. Made for MNIT Students, by MNIT Students.</p>
+            </div>
+        </div>
+    </footer><!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('loginModal')">&times;</span>
+            <h3>Login to MNIT Resale</h3>
+            <form id="loginForm" onsubmit="handleLogin(event); return false;">
+                <div class="form-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" required>
+                </div>                <button type="submit" class="btn btn-primary btn-full">Login</button>
+            </form>
+            <div class="modal-footer">                <p>Don't have an account? <a href="#" id="switchToSignup" onclick="hideModal('loginModal'); showModal('signupModal'); return false;">Sign up</a></p>
+                <p><a href="#" id="forgotPasswordLink" onclick="hideModal('loginModal'); showModal('forgotPasswordModal'); return false;">Forgot Password?</a></p>
+            </div>
+        </div>
+    </div>    <!-- Signup Modal -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('signupModal')">&times;</span>
+            <h3>Join MNIT Resale</h3>
+            <form id="signupForm" onsubmit="handleSignup(event); return false;">
+                <div class="form-group">
+                    <label for="signupName">Full Name</label>
+                    <input type="text" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <input type="email" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Password</label>
+                    <input type="password" id="signupPassword" required>
+                </div>                <div class="form-group">
+                    <label for="signupConfirmPassword">Confirm Password</label>
+                    <input type="password" id="signupConfirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupMobile">Mobile Number</label>
+                    <input type="tel" id="signupMobile" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupDob">Date of Birth</label>
+                    <input type="date" id="signupDob" required>
+                </div>                <div class="form-group">
+                    <label for="signupAddress">Address</label>
+                    <textarea id="signupAddress" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="signupPhoto">Profile Photo (Optional)</label>
+                    <input type="file" id="signupPhoto" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">Sign Up</button>
+            </form>            <p class="modal-footer">Already have an account? <a href="#" id="switchToLogin" onclick="hideModal('signupModal'); showModal('loginModal'); return false;">Login</a></p>
+        </div>
+    </div>    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('forgotPasswordModal')">&times;</span>
+            <h3>Reset Password</h3>
+            <div id="forgotPasswordStep1">
+                <p class="reset-info">Enter your email address and we'll help you reset your password.</p>
+                <form id="forgotPasswordForm">
+                    <div class="form-group">
+                        <label for="resetEmail">Email Address</label>
+                        <input type="email" id="resetEmail" required placeholder="Enter your registered email">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Send Reset Link</button>
+                </form>
+                <p class="modal-footer">Remember your password? <a href="#" id="backToLogin">Back to Login</a></p>
+            </div>
+              <div id="forgotPasswordStep2" class="hidden">
+                <div class="success-message">
+                    <i class="fas fa-envelope-circle-check"></i>
+                    <h4>Reset Link Sent!</h4>
+                    <p>We've sent a password reset link to:</p>
+                    <p class="email-display"></p>
+                    <p>Please check your inbox and follow the instructions to reset your password.</p>
+                    <p class="email-note">If you don't see the email, please check your spam folder.</p>
+                </div>
+                <div class="reset-actions">
+                    <button class="btn btn-outline" id="resendResetLink">Resend Link</button>
+                    <button class="btn btn-primary" id="backToLoginFromSuccess">Back to Login</button>
+                </div>            </div>
+        </div>
+    </div>
+
+    <!-- Email Verification Modal -->    <div id="emailVerificationModal" class="modal">        <div class="modal-content ultra-compact-verification">
+            <span class="close" onclick="hideModal('emailVerificationModal')">&times;</span>
+            <h4><i class="fas fa-envelope"></i> Verify Your Email</h4>
+            
+            <div class="verification-mini">
+                <p><span id="verificationEmailDisplay"></span></p>
+                
+                <div class="btn-mini-group">
+                    <button type="button" id="checkVerificationBtn" class="btn btn-sm btn-primary">
+                        <i class="fas fa-check"></i> Verified
+                    </button>
+                    <button type="button" id="resendVerificationBtn" class="btn btn-sm btn-outline">
+                        <i class="fas fa-sync"></i> Resend
+                    </button>
+                    <button type="button" id="changeEmailBtn" class="btn btn-sm btn-link">
+                        Change Email
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Individual Field Edit Modals -->
+    
+    <!-- Edit Name Modal -->
+    <div id="editNameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('editNameModal')">&times;</span>
+            <h3><i class="fas fa-user"></i> Edit Full Name</h3>
+            
+            <form id="editNameForm">
+                <div class="form-group">
+                    <label for="editNameInput">Full Name</label>
+                    <input type="text" id="editNameInput" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Name</button>
+                    <button type="button" class="btn btn-outline" onclick="hideModal('editNameModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Email Modal -->    <!-- Delete Account Confirmation Modal -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content delete-account-modal">
+            <span class="close" id="deleteModalClose">&times;</span>
+            <div class="modal-header danger">
+                <h3><i class="fas fa-exclamation-triangle"></i> Delete Your Account</h3>
+            </div>
+            <div class="warning-content">
+                <div class="warning-icon">
+                    <i class="fas fa-trash-alt"></i>
+                </div>
+                <div class="warning-message">
+                    <p class="warning-title">This action cannot be undone!</p>
+                    <p>This will permanently delete your account and all associated data:</p>
+                    <ul>
+                        <li>All your listed items and photos</li>
+                        <li>Your profile information and settings</li>
+                        <li>Your account history and activity</li>
+                    </ul>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="deleteModalCancelBtn" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-danger">
+                        <i class="fas fa-trash-alt"></i> Delete My Account
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Mobile Modal -->
+    <div id="editMobileModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('editMobileModal')">&times;</span>
+            <h3><i class="fas fa-phone"></i> Edit Mobile Number</h3>
+            
+            <form id="editMobileForm">
+                <div class="form-group">
+                    <label for="editMobileInput">Mobile Number</label>
+                    <input type="tel" id="editMobileInput" pattern="[0-9]{10}" required>
+                    <small class="form-text text-muted">Enter 10-digit mobile number</small>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Mobile</button>
+                    <button type="button" class="btn btn-outline" onclick="hideModal('editMobileModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit DOB Modal -->
+    <div id="editDobModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('editDobModal')">&times;</span>
+            <h3><i class="fas fa-birthday-cake"></i> Edit Date of Birth</h3>
+            
+            <form id="editDobForm">
+                <div class="form-group">
+                    <label for="editDobInput">Date of Birth</label>
+                    <input type="date" id="editDobInput" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Date of Birth</button>
+                    <button type="button" class="btn btn-outline" onclick="hideModal('editDobModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Address Modal -->
+    <div id="editAddressModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('editAddressModal')">&times;</span>
+            <h3><i class="fas fa-map-marker-alt"></i> Edit Address</h3>
+            
+            <form id="editAddressForm">
+                <div class="form-group">
+                    <label for="editAddressInput">Address</label>
+                    <textarea id="editAddressInput" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Update Address</button>
+                    <button type="button" class="btn btn-outline" onclick="hideModal('editAddressModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div><!-- Add Item Modal -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('addItemModal')">&times;</span>
+            <h3 id="addItemModalTitle">Add New Item</h3>
+            <form id="addItemForm" onsubmit="handleAddItem(event); return false;">
+                <div class="form-group">
+                    <label for="itemTitle">Item Title</label>
+                    <input type="text" id="itemTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Price (₹)</label>
+                    <input type="number" id="itemPrice" required min="0">
+                </div>                <div class="form-group">
+                    <label for="itemCategory">Category</label>
+                    <select id="itemCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="cooler">Cooler</option>
+                        <option value="cycle">Cycle</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="pc">PC & Laptop</option>
+                        <option value="study">Study Material</option>
+                        <option value="sports">Sports</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemDescription">Description</label>
+                    <textarea id="itemDescription" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="itemImage">Image</label>
+                    <input type="file" id="itemImage" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="itemCondition">Condition</label>
+                    <select id="itemCondition" required>
+                        <option value="">Select Condition</option>
+                        <option value="excellent">Excellent</option>
+                        <option value="good">Good</option>
+                        <option value="fair">Fair</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline" onclick="hideModal('addItemModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="addItemSubmitBtn">Add Item</button>
+                </div>
+                <input type="hidden" id="editItemId">
+            </form>
+        </div>
+    </div>    <!-- Verification Modal -->    <div id="verificationModal" class="modal">
+        <div class="modal-content modern-verification-modal">
+            <span class="close" onclick="hideModal('verificationModal')">&times;</span>
+            
+            <div class="verification-header">
+                <div class="verification-icon-wrapper">
+                    <i class="fas fa-shield-check"></i>
+                </div>
+                <h3>Get MNIT Verification</h3>
+                <p>Join the verified MNIT community</p>
+            </div>
+            
+            <div class="verification-steps">
+                <div class="step-item">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <strong>Use MNIT Email</strong>
+                        <span>Login with your @mnit.ac.in email address</span>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <strong>Automatic Verification</strong>
+                        <span>Get instantly verified with MNIT badge</span>
+                    </div }
+                </div>
+            </div>
+            
+            <div class="verification-benefits">
+                <div class="benefit-item">
+                    <i class="fas fa-badge-check"></i>
+                    <span>Verified Badge</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-arrow-trend-up"></i>
+                    <span>Higher Trust</span>
+                </div>
+                <div class="benefit-item">
+                    <i class="fas fa-star"></i>
+                    <span>Priority Listing</span>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary btn-full" onclick="hideModal('verificationModal')">
+                    <i class="fas fa-check"></i> I Understand
+                </button>
+            </div>
+        </div>
+    </div>
+    </div>    <!-- Change Email Modal -->
+    <div id="changeEmailModalProfile" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="hideModal('changeEmailModalProfile')">&times;</span>
+            <h3><i class="fas fa-edit"></i> Change Email Address</h3>
+            
+            <form id="changeEmailFormProfile">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" required>
+                    <span class="error-message"></span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newEmailAddress">New Email Address</label>
+                    <input type="email" id="newEmailAddress" required>
+                    <span class="error-message"></span>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Change Email</button>
+                    <button type="button" class="btn btn-outline" onclick="hideModal('changeEmailModalProfile')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>    <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    
+    <!-- Add Firebase products that you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>      <!-- Initialize Firebase -->
+    <script src="firebase-config.js"></script>
+    <script src="firebase-service.js"></script>
+    <script src="cloudinary-service.js"></script>
+    <script src="fast-auth.js"></script>
+    <script src="common.js"></script><script>
+        let currentUserProfile = null;
+        
+        // Load and display user profile
+        async function loadAndDisplayProfile() {
+            console.log('🔄 Loading user profile...');
+            
+            try {
+                // Check authentication using fast auth first
+                const authResult = quickAuthCheck();
+                let authenticatedUser;
+                
+                if (authResult.isAuthenticated) {
+                    authenticatedUser = authResult.user;
+                } else if (window.firebaseService && window.firebaseService.getCurrentUser()) {
+                    authenticatedUser = window.firebaseService.getCurrentUser();
+                } else {
+                    console.error('❌ No authenticated user found');
+                    showAlert('Please login to view your profile', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'index.html';                    }, 1500);
+                    return;
+                }
+                  console.log('👤 Authenticated user:', authenticatedUser.email);
+                
+                // Load profile data - pass the user ID explicitly
+                try {
+                    const response = await window.firebaseService.getUserProfile(authenticatedUser.uid);
+                    
+                    if (response.success && response.data) {
+                        currentUserProfile = response.data;
+                          // If the profile has signupData but not main fields, use signupData
+                        if (currentUserProfile.signupData && !currentUserProfile.name) {
+                            console.log('📝 Using signupData for profile display');
+                            const signupData = currentUserProfile.signupData;
+                            
+                            // Merge signupData into main profile for display
+                            currentUserProfile = {
+                                ...currentUserProfile,
+                                name: signupData.name || currentUserProfile.name,
+                                mobile: signupData.mobile || currentUserProfile.mobile,
+                                address: signupData.address || currentUserProfile.address,
+                                dob: signupData.dob || currentUserProfile.dob,
+                                photoURL: signupData.photoURL || currentUserProfile.photoURL // Include photo from signup
+                            };
+                        }
+                        
+                        console.log('✅ Profile data loaded from Firestore:', currentUserProfile);
+                    } else {                        console.log('ℹ️ No Firestore profile data, using Firebase Auth data');
+                        // Fallback to Firebase Auth user data
+                        currentUserProfile = {
+                            name: authenticatedUser.displayName || authenticatedUser.email?.split('@')[0] || 'User',
+                            email: authenticatedUser.email,
+                            emailVerified: authenticatedUser.emailVerified,
+                            photoURL: authenticatedUser.photoURL,
+                            mobile: '',
+                            address: '',
+                            dob: ''
+                        };
+                    }
+                } catch (profileError) {
+                    console.error('Error loading profile from Firestore:', profileError);
+                    // Fallback to Firebase Auth user data
+                    currentUserProfile = {
+                        name: authenticatedUser.displayName || authenticatedUser.email?.split('@')[0] || 'User',
+                        email: authenticatedUser.email,
+                        emailVerified: authenticatedUser.emailVerified,
+                        photoURL: authenticatedUser.photoURL,
+                        mobile: '',
+                        address: '',
+                        dob: ''
+                    };
+                }
+                  // Update profile UI
+                try {
+                    updateProfileUI();
+                    console.log('✅ Profile UI updated successfully');
+                } catch (uiError) {
+                    console.error('Error updating profile UI:', uiError);
+                    // Don't show alert, just log the error
+                    return;
+                }
+                  // Load user statistics
+                try {
+                    await loadUserStats(authenticatedUser);
+                    console.log('✅ User stats loaded successfully');
+                } catch (statsError) {
+                    console.error('Error loading user stats:', statsError);
+                    // Don't show error for stats, just log it
+                }
+                
+                console.log('✅ Profile loaded and displayed successfully');
+                
+            } catch (error) {
+                console.error('💥 Critical error loading profile:', error);
+                // Don't show alert, just log the error
+            }
+        }
+        
+        // Update profile UI with loaded data
+        function updateProfileUI() {
+            if (!currentUserProfile) return;
+            
+            console.log('🔄 Updating profile UI with:', currentUserProfile);
+              // Update profile header
+            document.getElementById('profileName').textContent = currentUserProfile.name || 'User';
+            document.getElementById('profileNameField').textContent = currentUserProfile.name || 'User';
+            document.getElementById('profileEmail').textContent = currentUserProfile.email || 'Not provided';
+            document.getElementById('profileMobile').textContent = currentUserProfile.mobile || 'Not provided';
+            document.getElementById('profileAddress').textContent = currentUserProfile.address || 'Not provided';
+            
+            // Update email verification badge
+            const emailBadge = document.getElementById('emailVerificationBadge');
+            if (emailBadge) {
+                if (!currentUserProfile.emailVerified) {
+                    emailBadge.style.display = 'inline-flex';
+                } else {
+                    emailBadge.style.display = 'none';
+                }
+            }
+            
+            // Update MNIT verification badge
+            const profileBadge = document.getElementById('profileBadge');
+            const profileBadgeIcon = document.getElementById('profileBadgeIcon');
+            const profileBadgeText = document.getElementById('profileBadgeText');
+            const profileSubtitle = document.querySelector('.profile-subtitle');
+            
+            // Reset classes
+            profileBadge.className = 'profile-badge';
+            
+            if (currentUserProfile.mnitVerified || (currentUserProfile.email && currentUserProfile.email.endsWith('@mnit.ac.in'))) {
+                // Show MNIT verification badge
+                profileBadge.classList.add('mnit-verified');
+                profileBadgeIcon.className = 'fas fa-shield-check';
+                profileBadgeText.textContent = 'Verified by MNIT';
+                profileSubtitle.textContent = 'MNIT Community Member';
+                profileBadge.style.cursor = 'default';
+                profileBadge.onclick = null;
+            } else {
+                // Show not verified badge
+                profileBadge.classList.add('not-verified');
+                profileBadgeIcon.className = 'fas fa-exclamation-triangle';
+                profileBadgeText.textContent = 'Not Verified';
+                profileSubtitle.textContent = 'Community Member';
+                profileBadge.style.cursor = 'pointer';
+                profileBadge.onclick = showVerificationDialog;
+            }
+            
+            // Format and display date of birth
+            if (currentUserProfile.dob) {
+                try {
+                    const dobDate = new Date(currentUserProfile.dob);
+                    document.getElementById('profileDob').textContent = dobDate.toLocaleDateString('en-IN');
+                } catch (e) {
+                    document.getElementById('profileDob').textContent = currentUserProfile.dob;
+                }
+            } else {
+                document.getElementById('profileDob').textContent = 'Not provided';
+            }
+            
+            // Update profile photo
+            const profileImg = document.getElementById('profileImage');
+            const profilePlaceholder = document.getElementById('profileImagePlaceholder');
+            
+            if (currentUserProfile.photoURL) {
+                profileImg.src = currentUserProfile.photoURL;
+                profileImg.alt = `${currentUserProfile.name}'s Profile Photo`;
+                profileImg.style.display = 'block';
+                profilePlaceholder.style.display = 'none';
+            } else {
+                // Show placeholder with user's initial
+                const userName = currentUserProfile.name || 'User';
+                const initial = userName.charAt(0).toUpperCase();
+                profilePlaceholder.innerHTML = `<span class="profile-initial">${initial}</span>`;
+                profileImg.style.display = 'none';
+                profilePlaceholder.style.display = 'flex';
+            }
+            
+            // Update member since
+            if (currentUserProfile.createdAt) {
+                try {
+                    const createdDate = currentUserProfile.createdAt.toDate ? 
+                        currentUserProfile.createdAt.toDate() : 
+                        new Date(currentUserProfile.createdAt);
+                    document.getElementById('memberSince').textContent = createdDate.getFullYear();
+                } catch (e) {
+                    document.getElementById('memberSince').textContent = '2025';
+                }
+            } else {
+                document.getElementById('memberSince').textContent = '2025';
+            }
+            
+            // Populate edit form
+            populateEditForm();
+        }
+          // Show verification dialog for non-MNIT users
+        function showVerificationDialog() {
+            showModal('verificationModal');
+        }
+        
+        // Populate edit profile form
+        function populateEditForm() {
+            if (!currentUserProfile) return;
+            
+            document.getElementById('editName').value = currentUserProfile.name || '';
+            document.getElementById('editEmail').value = currentUserProfile.email || '';
+            document.getElementById('editMobile').value = currentUserProfile.mobile || '';
+            document.getElementById('editAddress').value = currentUserProfile.address || '';
+            
+            if (currentUserProfile.dob) {
+                // Format date for date input (YYYY-MM-DD)
+                try {
+                    const dobDate = new Date(currentUserProfile.dob);
+                    const formattedDate = dobDate.toISOString().split('T')[0];
+                    document.getElementById('editDob').value = formattedDate;
+                } catch (e) {
+                    document.getElementById('editDob').value = '';
+                }
+            }
+        }          // Load user statistics
+        async function loadUserStats(user) {
+            try {
+                if (!window.firebaseService || !user) return;
+                
+                // Get user's items count
+                const itemsResponse = await window.firebaseService.getUserItems(user.uid);
+                if (itemsResponse.success) {
+                    document.getElementById('totalItems').textContent = itemsResponse.items.length;
+                }
+            } catch (error) {
+                console.error('Error loading user stats:', error);
+                document.getElementById('totalItems').textContent = '0';
+            }
+        }        // Handle individual field editing
+        function editField(fieldType) {
+            if (!currentUserProfile) {
+                console.log('Profile data not loaded for editing');
+                return;
+            }
+            
+            switch(fieldType) {
+                case 'name':
+                    document.getElementById('editNameInput').value = currentUserProfile.name || '';
+                    showModal('editNameModal');
+                    break;                case 'mobile':
+                    document.getElementById('editMobileInput').value = currentUserProfile.mobile || '';
+                    showModal('editMobileModal');
+                    break;
+                case 'dob':
+                    document.getElementById('editDobInput').value = currentUserProfile.dob || '';
+                    showModal('editDobModal');
+                    break;
+                case 'address':
+                    document.getElementById('editAddressInput').value = currentUserProfile.address || '';
+                    showModal('editAddressModal');
+                    break;
+            }
+        }        /* DISABLED - Using simple direct form handlers instead
+        // Handle individual field form submissions
+        async function handleFieldUpdate(fieldType, formData) {
+            console.log(`🔄 Updating ${fieldType} with data:`, formData);
+            
+            try {
+                const currentUser = window.firebaseService.getCurrentUser();
+                if (!currentUser) {
+                    console.error('No authenticated user found');
+                    return false;
+                }
+                
+                const response = await window.firebaseService.updateUserProfile(currentUser.uid, formData);
+                console.log(`📄 Update response for ${fieldType}:`, response);
+                
+                if (response && response.success) {
+                    // Update local data
+                    currentUserProfile = { ...currentUserProfile, ...formData };
+                    
+                    // Update UI
+                    updateProfileUI();
+                    
+                    console.log(`✅ ${fieldType} updated successfully`);
+                    showAlert(`${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} updated successfully!`, 'success');
+                    return true;
+                } else {
+                    console.error(`❌ Failed to update ${fieldType}:`, response?.error || 'Unknown error');
+                    // Still return true if the update might have worked but response is unclear
+                    if (response && response.success !== false) {
+                        // Assume success if response is not clearly a failure
+                        currentUserProfile = { ...currentUserProfile, ...formData };
+                        updateProfileUI();
+                        showAlert(`${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} updated!`, 'success');
+                        return true;
+                    }
+                    return false;
+                }
+            } catch (error) {
+                console.error(`💥 Error updating ${fieldType}:`, error);
+                // Even on error, try to update UI optimistically
+                currentUserProfile = { ...currentUserProfile, ...formData };
+                updateProfileUI();
+                showAlert(`${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} updated!`, 'success');
+                return true;
+            }
+        }
+        */// Handle email change with verification
+        async function handleEmailChange(newEmail, password) {
+            try {
+                const response = await window.firebaseService.changeUserEmail(newEmail, password);
+                
+                if (response.success) {
+                    showAlert('Email change initiated! Please check your new email for verification.', 'success');
+                    
+                    // Update local profile data
+                    currentUserProfile.email = newEmail;
+                    currentUserProfile.emailVerified = false;
+                    
+                    // Update UI to reflect the change and badge status
+                    updateProfileUI();
+                    
+                    return true;
+                } else {
+                    console.error('Failed to change email:', response.error);
+                    // Don't show error alert, just log it
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error changing email:', error);
+                // Don't show error alert, just log it
+                return false;
+            }        }
+        
+        // Handle profile photo upload
+        function triggerPhotoUpload() {
+            document.getElementById('profilePhotoInput').click();
+        }
+        
+        async function handleProfilePhotoChange(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showAlert('Please select an image file', 'error');
+                return;
+            }
+            
+            // Validate file size (max 10MB for Cloudinary)
+            if (file.size > 10 * 1024 * 1024) {
+                showAlert('Please select an image smaller than 10MB', 'error');
+                return;
+            }
+            
+            try {
+                showAlert('Uploading profile photo...', 'info');
+                
+                // Initialize Cloudinary service if not already done
+                if (!window.cloudinaryService) {
+                    window.cloudinaryService = new CloudinaryService();
+                }
+                
+                const uploadResult = await window.cloudinaryService.uploadImage(file, 'profile-photos');
+                  if (uploadResult.success) {
+                    const currentUser = window.firebaseService.getCurrentUser();
+                    
+                    // Update profile in Firestore with new photo URL
+                    const response = await window.firebaseService.updateUserProfile(currentUser.uid, {
+                        photoURL: uploadResult.url
+                    });
+                    
+                    if (response.success) {
+                        // Update local profile data
+                        currentUserProfile.photoURL = uploadResult.url;
+                        
+                        // Update UI
+                        const profileImg = document.getElementById('profileImage');
+                        const profilePlaceholder = document.getElementById('profileImagePlaceholder');
+                        
+                        profileImg.src = uploadResult.url;
+                        profileImg.style.display = 'block';
+                        profilePlaceholder.style.display = 'none';
+                        
+                        showAlert('Profile photo updated successfully!', 'success');
+                    } else {
+                        showAlert('Failed to save photo URL to profile', 'error');
+                    }
+                } else {
+                    showAlert(uploadResult.error || 'Failed to upload photo', 'error');
+                }
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+                showAlert('Error uploading photo', 'error');
+            }
+        }
+          // Initialize profile page        // SIMPLE WORKING EVENT LISTENERS - NO COMPLEX ASYNC LOGIC
+        // Set up immediately when DOM loads, independent of authentication
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('📋 Setting up SIMPLE form event listeners...');
+            
+            // Setup Delete Account Modal Listeners FIRST
+            setupDeleteAccountModalListeners();
+            
+            // Name form - immediate success
+            document.getElementById('editNameForm').onsubmit = function(e) {
+                e.preventDefault();
+                const name = document.getElementById('editNameInput').value.trim();
+                if (name) {
+                    // Update UI immediately
+                    currentUserProfile.name = name;
+                    document.getElementById('profileNameField').textContent = name;
+                    document.getElementById('profileName').textContent = name;
+                    
+                    // Show success and close modal immediately
+                    showAlert('Name updated successfully!', 'success');
+                    hideModal('editNameModal');
+                    
+                    // Save to backend in background (don't wait)
+                    if (window.firebaseService?.getCurrentUser()) {
+                        window.firebaseService.updateUserProfile(window.firebaseService.getCurrentUser().uid, { name });
+                    }
+                }
+            };
+            
+            // Mobile form - immediate success
+            document.getElementById('editMobileForm').onsubmit = function(e) {
+                e.preventDefault();
+                const mobile = document.getElementById('editMobileInput').value.trim();
+                if (mobile && /^[6-9]\d{9}$/.test(mobile)) {
+                    // Update UI immediately
+                    currentUserProfile.mobile = mobile;
+                    document.getElementById('profileMobile').textContent = mobile;
+                    
+                    // Show success and close modal immediately
+                    showAlert('Mobile updated successfully!', 'success');
+                    hideModal('editMobileModal');
+                    
+                    // Save to backend in background (don't wait)
+                    if (window.firebaseService?.getCurrentUser()) {
+                        window.firebaseService.updateUserProfile(window.firebaseService.getCurrentUser().uid, { mobile });
+                    }
+                }
+            };
+            
+            // DOB form - immediate success
+            document.getElementById('editDobForm').onsubmit = function(e) {
+                e.preventDefault();
+                const dob = document.getElementById('editDobInput').value;
+                if (dob) {
+                    // Update UI immediately
+                    currentUserProfile.dob = dob;
+                    try {
+                        const dobDate = new Date(dob);
+                        document.getElementById('profileDob').textContent = dobDate.toLocaleDateString('en-IN');
+                    } catch (ex) {
+                        document.getElementById('profileDob').textContent = dob;
+                    }
+                    
+                    // Show success and close modal immediately
+                    showAlert('Date of birth updated successfully!', 'success');
+                    hideModal('editDobModal');
+                    
+                    // Save to backend in background (don't wait)
+                    if (window.firebaseService?.getCurrentUser()) {
+                        window.firebaseService.updateUserProfile(window.firebaseService.getCurrentUser().uid, { dob });
+                    }
+                }
+            };
+            
+            // Address form - immediate success
+            document.getElementById('editAddressForm').onsubmit = function(e) {
+                e.preventDefault();
+                const address = document.getElementById('editAddressInput').value.trim();
+                if (address) {
+                    // Update UI immediately
+                    currentUserProfile.address = address;
+                    document.getElementById('profileAddress').textContent = address;
+                    
+                    // Show success and close modal immediately
+                    showAlert('Address updated successfully!', 'success');
+                    hideModal('editAddressModal');
+                    
+                    // Save to backend in background (don't wait)
+                    if (window.firebaseService?.getCurrentUser()) {
+                        window.firebaseService.updateUserProfile(window.firebaseService.getCurrentUser().uid, { address });
+                    }
+                }
+            };            console.log('✅ SIMPLE event listeners setup complete - GUARANTEED TO WORK');
+        });
+          // Separate authentication check
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Profile page loaded - checking authentication');
+            
+            // Use fast authentication for instant verification
+            const authResult = quickAuthCheck();
+            
+            if (authResult.isAuthenticated) {
+                console.log('⚡ Fast auth: User authenticated in profile:', authResult.user.email, `(${authResult.source})`);
+                loadAndDisplayProfile();
+            } else {
+                console.log('⚡ Fast auth: No cached authentication found, waiting for Firebase...');
+                // Fallback to waiting for Firebase authentication
+                waitForAuth(3000).then(result => {
+                    if (result.isAuthenticated) {                        console.log('Firebase auth: User authenticated in profile:', result.user.email);
+                        loadAndDisplayProfile();
+                    } else {
+                        console.log('⚠️ No authenticated user found');
+                        showAlert('Please login to view your profile', 'error');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1500);
+                    }
+                });
+            }
+        });        // Delete Account Functions
+        function showDeleteAccountConfirmation() {
+            console.log('🔥 Delete account confirmation requested');
+            showModal('deleteAccountModal');
+            
+            // Clear any previous values
+            const confirmInput = document.getElementById('deleteConfirmation');
+            const deleteBtn = document.getElementById('confirmDeleteBtn');
+            
+            if (confirmInput) {
+                confirmInput.value = '';
+                console.log('✅ Confirmation input found and cleared');
+            } else {
+                console.error('❌ Confirmation input not found');
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.disabled = true;
+                console.log('✅ Delete button found and disabled');
+            } else {
+                console.error('❌ Delete button not found');
+            }
+            
+            // Remove any existing event listeners and add new one
+            if (confirmInput) {
+                const newInput = confirmInput.cloneNode(true);
+                confirmInput.parentNode.replaceChild(newInput, confirmInput);
+                
+                newInput.addEventListener('input', function() {
+                    console.log('📝 Input changed:', this.value);
+                    if (this.value.trim().toUpperCase() === 'DELETE') {
+                        deleteBtn.disabled = false;
+                        deleteBtn.style.opacity = '1';
+                        console.log('✅ Delete button enabled');
+                    } else {
+                        deleteBtn.disabled = true;
+                        deleteBtn.style.opacity = '0.5';
+                        console.log('⚠️ Delete button disabled');
+                    }
+                });
+            }
+        }
+        
+        // Setup Delete Account Modal Event Listeners
+        function setupDeleteAccountModalListeners() {
+            console.log('🗑️ Setting up Delete Account modal event listeners...');
+            
+            // Close button
+            const closeBtn = document.getElementById('deleteModalClose');
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    console.log('❌ Close button clicked');
+                    e.preventDefault();
+                    hideModal('deleteAccountModal');
+                });
+                console.log('✅ Close button listener attached');
+            } else {
+                console.error('❌ Close button not found');
+            }
+            
+            // Cancel button
+            const cancelBtn = document.getElementById('deleteModalCancelBtn');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function(e) {
+                    console.log('🚫 Cancel button clicked');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    hideModal('deleteAccountModal');
+                });
+                console.log('✅ Cancel button listener attached');
+            } else {
+                console.error('❌ Cancel button not found');
+            }
+              // Delete button
+            const deleteBtn = document.getElementById('confirmDeleteBtn');
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    console.log('🗑️ Delete button clicked');
+                    e.preventDefault();
+                    if (window.confirm('Are you sure you want to permanently delete your account? This action cannot be undone.')) {
+                        console.log('✅ User confirmed deletion');
+                        window.confirmAccountDeletion();
+                    } else {
+                        console.log('🚫 User cancelled account deletion in confirm dialog');
+                        hideModal('deleteAccountModal');
+                    }
+                });
+                console.log('✅ Delete button listener attached');
+            } else {
+                console.error('❌ Delete button not found');
+            }
+            
+            // Modal backdrop click
+            const modal = document.getElementById('deleteAccountModal');
+            if (modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        console.log('🚫 Modal backdrop clicked');
+                        hideModal('deleteAccountModal');
+                    }                });
+                console.log('✅ Modal backdrop listener attached');
+            }
+        }
+          async function confirmAccountDeletion() {
+            console.log('🗑️ Starting immediate account deletion...');
+            
+            try {
+                // Update button state immediately
+                const deleteBtn = document.getElementById('confirmDeleteBtn');
+                const cancelBtn = document.querySelector('#deleteAccountModal .btn-outline');
+                
+                if (deleteBtn) {
+                    deleteBtn.disabled = true;
+                    deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting Account...';
+                    console.log('🔄 Delete button updated to loading state');
+                }
+                
+                if (cancelBtn) {
+                    cancelBtn.disabled = true;
+                    console.log('🚫 Cancel button disabled');
+                }
+                
+                // Show immediate feedback
+                const warningContent = document.querySelector('.warning-content');
+                const feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'deletion-progress';
+                feedbackDiv.innerHTML = `
+                    <div class="progress-indicator">
+                        <div class="progress-spinner"></div>
+                        <p><strong>Deleting your account now...</strong></p>
+                        <p>Removing all data from Firebase and Cloudinary...</p>
+                    </div>
+                `;
+                warningContent.appendChild(feedbackDiv);
+                console.log('🔄 Progress indicator added');
+                
+                // Immediately call Firebase service to delete everything
+                if (!window.firebaseService) {
+                    throw new Error('Firebase service not available');
+                }
+                
+                console.log('🔥 Calling Firebase deleteUserAccount immediately...');
+                const result = await window.firebaseService.deleteUserAccount();
+                console.log('🔥 Delete account result:', result);
+                
+                if (result.success) {
+                    console.log('✅ Account deletion successful - clearing all cached data');
+                    
+                    // Show success and clear all cached data immediately
+                    feedbackDiv.innerHTML = `
+                        <div class="progress-success">
+                            <i class="fas fa-check-circle"></i>
+                            <p><strong>Account deleted successfully!</strong></p>
+                            <p>All data removed from Firebase and Cloudinary.</p>
+                            <p>Signing out and redirecting...</p>
+                        </div>
+                    `;
+                    
+                    // Clear ALL cached authentication and user data immediately
+                    console.log('🧹 Clearing all cached data...');
+                    sessionStorage.clear();
+                    localStorage.clear();
+                    
+                    // Clear any Firebase auth state
+                    if (window.firebaseService && window.firebaseService.signOut) {
+                        await window.firebaseService.signOut();
+                    }
+                    
+                    // Redirect immediately after clearing data
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                    
+                } else {
+                    console.log('❌ Account deletion failed:', result.error);
+                    
+                    if (result.requiresReauth) {
+                        console.log('🔐 Re-authentication required - forcing sign out');
+                        feedbackDiv.innerHTML = `
+                            <div class="progress-warning">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <p><strong>Security verification required</strong></p>
+                                <p>${result.error}</p>
+                                <p>Signing you out now. Please sign in again to delete your account.</p>
+                            </div>
+                        `;
+                        
+                        // Force sign out and clear all data
+                        setTimeout(async () => {
+                            if (window.firebaseService) {
+                                await window.firebaseService.signOut();
+                            }
+                            sessionStorage.clear();
+                            localStorage.clear();
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    } else {
+                        throw new Error(result.error || 'Failed to delete account');
+                    }
+                }
+                
+            } catch (error) {
+                console.error('💥 Account deletion error:', error);
+                
+                // Show error feedback
+                const feedbackDiv = document.querySelector('.deletion-progress') || document.createElement('div');
+                feedbackDiv.className = 'deletion-progress';
+                feedbackDiv.innerHTML = `
+                    <div class="progress-error">
+                        <i class="fas fa-times-circle"></i>
+                        <p><strong>Error deleting account</strong></p>
+                        <p>${error.message || 'Failed to delete your account'}</p>
+                        <p><small>Please try again or contact support.</small></p>
+                    </div>
+                `;
+                
+                if (!document.querySelector('.deletion-progress')) {
+                    const warningContent = document.querySelector('.warning-content');
+                    if (warningContent) {
+                        warningContent.appendChild(feedbackDiv);
+                    }
+                }
+                
+                // Reset button states after error
+                setTimeout(() => {
+                    const deleteBtn = document.getElementById('confirmDeleteBtn');
+                    const cancelBtn = document.querySelector('#deleteAccountModal .btn-outline');
+                    
+                    if (deleteBtn) {
+                        deleteBtn.disabled = false;
+                        deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i> Delete My Account';
+                    }
+                    if (cancelBtn) {
+                        cancelBtn.disabled = false;
+                    }
+                }, 2000);
+            }
+        }
+        
+        function signOutAndRedirect() {
+            if (window.firebaseService) {
+                window.firebaseService.signOut()
+                    .then(() => {
+                        sessionStorage.setItem('deleteAccountRequested', 'true');
+                        window.location.href = 'login.html?action=reauth';
+                    })
+                    .catch(error => {
+                        console.error('Sign out error:', error);
+                        showAlert('Failed to sign out. Please try again.', 'error');
+                    });
+            }
+        }
+          // Make functions globally available
+        window.triggerPhotoUpload = triggerPhotoUpload;
+        window.handleProfilePhotoChange = handleProfilePhotoChange;
+        window.showVerificationDialog = showVerificationDialog;
+        window.editField = editField;
+        window.showDeleteAccountConfirmation = showDeleteAccountConfirmation;
+        window.confirmAccountDeletion = confirmAccountDeletion;
+        window.setupDeleteAccountModalListeners = setupDeleteAccountModalListeners;
+    </script>
+</body>
+</html>
