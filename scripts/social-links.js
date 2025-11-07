@@ -8,7 +8,7 @@ const DEFAULT_SOCIAL_LINKS = {
   whatsapp: "https://wa.me/918696056626",
   facebook: "https://facebook.com/khushgarg2910",
   instagram: "https://instagram.com/khushgarg.in",
-  twitter: "https://x.com/gargkhush5",
+  twitter: "https://x.com/khushgarg5",
   linkedin: "https://linkedin.com/in/gargkhush5",
   github: "https://github.com/gargkhush5"
 };
@@ -115,3 +115,4 @@ document.addEventListener('DOMContentLoaded', function() {
   // Load form inputs (manage-social.html)
   loadSocialLinksForm();
 });
+
