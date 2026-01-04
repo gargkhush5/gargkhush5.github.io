@@ -50,19 +50,28 @@
   </footer>
   <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
-  <script>
+  <script type="module">
+    import { getResumeURL } from './scripts/firebase-storage.js';
+    
     // Load custom resume data
-    function loadResumeData() {
+    async function loadResumeData() {
       const resumeData = JSON.parse(localStorage.getItem('resumeData'));
-      const resumeFile = JSON.parse(localStorage.getItem('resumeFile'));
-        // Update download link if custom resume file exists
-      if (resumeFile) {
-        const downloadBtn = document.getElementById('downloadBtn');
-        const description = document.getElementById('resumeDescription');
+      
+      // Try to load resume file from Firebase Storage
+      try {
+        const resumeFile = await getResumeURL();
         
-        downloadBtn.href = resumeFile.data;
-        downloadBtn.download = resumeFile.name;
-        description.textContent = `Download my latest resume (${resumeFile.name}):`;
+        // Update download link if resume file exists
+        if (resumeFile && resumeFile.url) {
+          const downloadBtn = document.getElementById('downloadBtn');
+          const description = document.getElementById('resumeDescription');
+          
+          downloadBtn.href = resumeFile.url;
+          downloadBtn.download = resumeFile.name || 'resume.pdf';
+          description.textContent = `Download my latest resume (${resumeFile.name || 'resume.pdf'}):`;
+        }
+      } catch (error) {
+        console.error('Error loading resume:', error);
       }
       
       // Display resume content preview if available

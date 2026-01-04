@@ -6,6 +6,317 @@
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <style>
+    /* Photo Gallery Styles */
+    #photos {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+    
+    #photos h2 {
+      text-align: center;
+      color: #004f90;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .gallery-description {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    
+    /* Modern Gallery Grid */
+    .photo-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem 0;
+    }
+    
+    /* Photo Container */
+    .photo-item {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .photo-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0, 79, 144, 0.2);
+    }
+    
+    /* Photo Image */
+    .photo-item img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    
+    .photo-item:hover img {
+      transform: scale(1.05);
+    }
+    
+    /* Photo Caption Below Image */
+    .photo-caption {
+      padding: 1rem;
+      background: #fff;
+      color: #333;
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    /* Expand Icon */
+    .zoom-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 79, 144, 0.9);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+    
+    .photo-item:hover .zoom-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+    
+    /* Lightbox Modal */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 10000;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .lightbox.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    /* Lightbox Content */
+    .lightbox-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+      animation: zoomIn 0.3s ease;
+    }
+    
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 90vh;
+      object-fit: contain; /* Shows full image without cropping */
+      border-radius: 8px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    /* Lightbox Caption */
+    .lightbox-caption {
+      position: absolute;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 500;
+      padding: 1rem;
+    }
+    
+    /* Close Button */
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 3rem;
+      color: white;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.3s ease, transform 0.3s ease;
+      z-index: 10001;
+    }
+    
+    .lightbox-close:hover {
+      background: rgba(0, 79, 144, 0.8);
+      transform: rotate(90deg);
+    }
+    
+    /* Navigation Arrows */
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 2rem;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    
+    .lightbox-nav:hover {
+      background: rgba(0, 79, 144, 0.8);
+    }
+    
+    .lightbox-prev {
+      left: 30px;
+    }
+    
+    .lightbox-next {
+      right: 30px;
+    }
+    
+    /* No Photos Message */
+    .no-photos-message {
+      display: none;
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #666;
+    }
+    
+    .no-photos-message.active {
+      display: block;
+    }
+    
+    .no-photos-message .icon {
+      font-size: 5rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+    
+    .no-photos-message h3 {
+      color: #004f90;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .no-photos-message p {
+      color: #999;
+      font-size: 1.1rem;
+    }
+    
+    /* Loading Spinner */
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+    
+    .loading.active {
+      display: block;
+    }
+    
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #004f90;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .photo-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+      
+      .lightbox-nav {
+        padding: 0.8rem 1rem;
+        display: flex !important; /* Force display on mobile */
+        z-index: 10002;
+      }
+      
+      .lightbox-prev {
+        left: 5px;
+      }
+      
+      .lightbox-next {
+        right: 5px;
+      }
+      
+      .lightbox-close {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 2rem;
+      }
+      
+      .lightbox-caption {
+        font-size: 0.9rem;
+        bottom: -40px;
+      }
+      
+      /* Show expand icon on mobile without hover */
+      .zoom-icon {
+        opacity: 0.89rem;
+        bottom: -40px;
+      }
+    }
+  </style>
 </head>
 <body>
   <header>
@@ -28,26 +339,54 @@
   <!-- Admin info section - added by auth-ui.js -->
 </div>
 
-  <main>    <section id="photos">
+  <main>
+    <section id="photos">
       <h2>My Favorite Photos</h2>
+      <p class="gallery-description" style="display: none;"></p>
+      
+      <!-- Loading Indicator -->
+      <div class="loading active">
+        <div class="spinner"></div>
+        <p>Loading photos...</p>
+      </div>
+      
+      <!-- No Photos Message -->
+      <div class="no-photos-message">
+        <div class="icon">📷</div>
+        <h3>No Photos Available</h3>
+        <p>There are currently no photos in the gallery.</p>
+      </div>
+      
+      <!-- Photo Gallery Grid -->
       <div class="photo-gallery">
-        <img src="photos/photo1.jpg" alt="Photo 1">
-        <img src="photos/photo2.jpg" alt="Photo 2">
-        <img src="photos/photo3.jpg" alt="Photo 3">
-        <img src="photos/photo4.jpg" alt="Photo 4">
-        <img src="photos/photo5.jpg" alt="Photo 5">
+        <!-- Default photos - will be replaced by dynamic loading -->
       </div>
     </section>
+    
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+      <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+      <span class="lightbox-nav lightbox-prev" onclick="changePhoto(-1)">&#10094;</span>
+      <span class="lightbox-nav lightbox-next" onclick="changePhoto(1)">&#10095;</span>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="">
+        <div class="lightbox-caption" id="lightbox-caption"></div>
+      </div>
+    </div>
   </main>
   <footer>
     <p>&copy; 2025 Khush Garg</p>
   </footer>
   <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
-  <script>
+  <script type="module">
+    import { getPhotosMetadata, getAllPhotos } from './scripts/firebase-storage.js';
+    
+    let currentPhotos = [];
+    let currentPhotoIndex = 0;
+    
     // Load custom photo gallery data
-    function loadPhotoGallery() {
-      const photosData = JSON.parse(localStorage.getItem('photosData'));
+    async function loadPhotoGallery() {
       const gallerySettings = JSON.parse(localStorage.getItem('gallerySettings'));
       
       // Update gallery title and description if custom data exists
@@ -60,35 +399,162 @@
         }
         
         if (gallerySettings.description) {
-          // Add description if it doesn't exist
-          let descriptionEl = document.querySelector('#photos .gallery-description');
-          if (!descriptionEl) {
-            descriptionEl = document.createElement('p');
-            descriptionEl.className = 'gallery-description';
-            descriptionEl.style.marginBottom = '1.5rem';
-            descriptionEl.style.color = '#666';
-            document.querySelector('#photos h2').after(descriptionEl);
+          const descriptionEl = document.querySelector('.gallery-description');
+          if (descriptionEl) {
+            descriptionEl.textContent = gallerySettings.description;
+            descriptionEl.style.display = 'block';
           }
-          descriptionEl.textContent = gallerySettings.description;
         }
       }
       
-      // Update photo gallery if custom photos exist
-      if (photosData && photosData.length > 0) {
-        const photoGallery = document.querySelector('.photo-gallery');
-        if (photoGallery) {
-          photoGallery.innerHTML = '';
-          
-          photosData.forEach(photo => {
-            const img = document.createElement('img');
-            img.src = photo.src;
-            img.alt = photo.alt || photo.caption;
-            img.title = photo.caption;
-            photoGallery.appendChild(img);
+      // Try to get photos from Firebase Storage first
+      try {
+        const firebasePhotos = await getAllPhotos();
+        console.log('📦 Loaded photos from Firebase Storage:', firebasePhotos.length);
+        
+        if (firebasePhotos.length > 0) {
+          // Convert Firebase Storage format to display format
+          const photosMetadata = getPhotosMetadata();
+          currentPhotos = firebasePhotos.map((photo, index) => {
+            // Try to find existing metadata for captions
+            const existing = photosMetadata.find(p => p.storagePath === photo.storagePath);
+            return {
+              url: photo.url,
+              caption: existing?.caption || photo.name.replace(/\.\w+$/, '').replace(/_/g, ' '),
+              storagePath: photo.storagePath
+            };
           });
+          
+          renderPhotoGallery(currentPhotos);
+          document.querySelector('.no-photos-message').classList.remove('active');
+        } else {
+          // No photos in Firebase Storage
+          currentPhotos = [];
+          document.querySelector('.photo-gallery').innerHTML = '';
+          document.querySelector('.no-photos-message').classList.add('active');
+        }
+      } catch (error) {
+        console.error('❌ Error loading photos from Firebase:', error);
+        // Fallback to localStorage
+        const photosData = getPhotosMetadata();
+        if (photosData && photosData.length > 0) {
+          currentPhotos = photosData;
+          renderPhotoGallery(photosData);
+          document.querySelector('.no-photos-message').classList.remove('active');
+        } else {
+          // No photos anywhere
+          currentPhotos = [];
+          document.querySelector('.photo-gallery').innerHTML = '';
+          document.querySelector('.no-photos-message').classList.add('active');
         }
       }
+      
+      // Hide loading indicator
+      document.querySelector('.loading').classList.remove('active');
     }
+    
+    // Render photo gallery
+    function renderPhotoGallery(photos) {
+      const photoGallery = document.querySelector('.photo-gallery');
+      photoGallery.innerHTML = '';
+      
+      photos.forEach((photo, index) => {
+        const photoItem = document.createElement('div');
+        photoItem.className = 'photo-item';
+        photoItem.onclick = () => openLightbox(index);
+        
+        const img = document.createElement('img');
+        img.src = photo.url || photo.src;
+        img.alt = photo.caption || 'Photo';
+        // Eager load first 3 photos, lazy load rest for better performance
+        img.loading = index < 3 ? 'eager' : 'lazy';
+        
+        const caption = document.createElement('div');
+        caption.className = 'photo-caption';
+        caption.textContent = photo.caption || `Photo ${index + 1}`;
+        
+        const zoomIcon = document.createElement('div');
+        zoomIcon.className = 'zoom-icon';
+        zoomIcon.innerHTML = '⤢'; // Expand/fullscreen icon
+        
+        photoItem.appendChild(img);
+        photoItem.appendChild(caption);
+        photoItem.appendChild(zoomIcon);
+        photoGallery.appendChild(photoItem);
+      });
+    }
+    
+    // Open lightbox
+    window.openLightbox = function(index) {
+      currentPhotoIndex = index;
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      const caption = document.getElementById('lightbox-caption');
+      
+      const photo = currentPhotos[index];
+      img.src = photo.url || photo.src;
+      img.alt = photo.caption || 'Photo';
+      caption.textContent = photo.caption || `Photo ${index + 1}`;
+      
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent scrolling
+    }
+    
+    // Close lightbox
+    window.closeLightbox = function() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('active');
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+    
+    // Change photo in lightbox
+    window.changePhoto = function(direction) {
+      currentPhotoIndex += direction;
+      
+      // Loop around
+      if (currentPhotoIndex < 0) {
+        currentPhotoIndex = currentPhotos.length - 1;
+      } else if (currentPhotoIndex >= currentPhotos.length) {
+        currentPhotoIndex = 0;
+      }
+      
+      const img = document.getElementById('lightbox-img');
+      const caption = document.getElementById('lightbox-caption');
+      const photo = currentPhotos[currentPhotoIndex];
+      
+      // Animate photo change
+      img.style.opacity = '0';
+      setTimeout(() => {
+        img.src = photo.url || photo.src;
+        img.alt = photo.caption || 'Photo';
+        caption.textContent = photo.caption || `Photo ${currentPhotoIndex + 1}`;
+        img.style.opacity = '1';
+      }, 150);
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      const lightbox = document.getElementById('lightbox');
+      if (lightbox.classList.contains('active')) {
+        if (e.key === 'Escape') {
+          closeLightbox();
+        } else if (e.key === 'ArrowLeft') {
+          changePhoto(-1);
+        } else if (e.key === 'ArrowRight') {
+          changePhoto(1);
+        }
+      }
+    });
+    
+    // Close lightbox when clicking outside image
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeLightbox();
+      }
+    });
+    
+    // Add smooth transition to lightbox image
+    document.getElementById('lightbox-img').style.transition = 'opacity 0.15s ease';
     
     // Function to toggle sidebar
     function toggleSidebar() {
@@ -114,13 +580,16 @@
         sidebar.classList.remove('active');
         main.classList.remove('sidebar-active');
       } else {
-        sidebar.classList.remove('active'); // Remove the active class on large screens
+        sidebar.classList.remove('active');
       }
-    }    // Run on page load
+    }
+
+    // Run on page load
     window.addEventListener('load', () => {
       checkScreenWidth();
       loadPhotoGallery();
     });
+    
     // Run when window is resized
     window.addEventListener('resize', checkScreenWidth);
   </script>
