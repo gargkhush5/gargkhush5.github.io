@@ -343,7 +343,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { savePhotosMetadata, getPhotosMetadata, saveGallerySettings, getGallerySettings } from './scripts/firebase-database.js';
+    import { savePhotosMetadata, getPhotosMetadata, saveGallerySettings as saveGallerySettingsDB, getGallerySettings } from './scripts/firebase-database.js';
     
     // Firebase configuration
     const firebaseConfig = {
@@ -404,79 +404,111 @@
     async function detectAvailablePhotos() {
       const availablePhotos = [];
       
-      // Check for photo1.jpg through photo8.jpg
+      // Actually check which photos exist
       for (let i = 1; i <= 8; i++) {
         const filename = `photo${i}.jpg`;
-        availablePhotos.push(filename);
+        const url = `photos/${filename}`;
+        
+        try {
+          const response = await fetch(url, { method: 'HEAD' });
+          if (response.ok) {
+            availablePhotos.push(filename);
+            console.log(`✅ Found ${filename}`);
+          } else {
+            console.log(`⚠️ ${filename} not found`);
+          }
+        } catch (error) {
+          console.log(`❌ Error checking ${filename}:`, error);
+        }
       }
       
+      console.log(`📸 Total photos found: ${availablePhotos.length}`);
       return availablePhotos;
     }
     
     // Load current photos data from Firebase Database
     async function loadPhotosData() {
-      const savedSettings = await getGallerySettings() || {
-        title: 'My Favorite Photos',
-        description: ''
-      };
-
-      // Get list of available photo slots (photo1-8.jpeg)
-      const availablePhotos = await detectAvailablePhotos();
-
-      // Load photo metadata from Firebase Database
+      console.log('🔄 Loading photos data...');
+      
+      // Load gallery settings
       try {
-        const metadata = await getPhotosMetadata();
-        console.log('📦 Loaded photo metadata from Firebase Database:', metadata);
-        
-        if (metadata && metadata.length > 0) {
-          photosData = metadata;
-        } else {
-          // Initialize with available photo slots
-          photosData = availablePhotos.map((filename, index) => ({
-            filename: filename,
-            caption: `Photo ${index + 1}`,
-            displayOrder: index + 1
-          }));
-          
-          // Save initial data
-          await savePhotosMetadata(photosData);
-        }
+        const savedSettings = await getGallerySettings() || {
+          title: 'My Favorite Photos',
+          description: ''
+        };
+        document.getElementById('galleryTitle').value = savedSettings.title || 'My Favorite Photos';
+        document.getElementById('galleryDescription').value = savedSettings.description || '';
       } catch (error) {
-        console.error('❌ Error loading photo metadata:', error);
-        // Initialize with default photo slots
-        photosData = availablePhotos.map((filename, index) => ({
-          filename: filename,
-          caption: `Photo ${index + 1}`,
-          displayOrder: index + 1
-        }));
+        console.error('⚠️ Error loading gallery settings:', error);
+        document.getElementById('galleryTitle').value = 'My Favorite Photos';
+        document.getElementById('galleryDescription').value = '';
       }
 
-      // Load gallery settings
-      document.getElementById('galleryTitle').value = savedSettings.title || 'My Favorite Photos';
-      document.getElementById('galleryDescription').value = savedSettings.description || '';
+      // Get list of actually available photos
+      const availablePhotos = await detectAvailablePhotos();
+      console.log('📸 Available photos:', availablePhotos);
 
+      // Load photo metadata from Firebase Database
+      let metadata = null;
+      try {
+        metadata = await getPhotosMetadata();
+        console.log('📦 Loaded photo metadata from Firebase:', metadata);
+      } catch (error) {
+        console.error('❌ Error loading photo metadata from Firebase:', error);
+        console.log('📝 Will use default captions');
+      }
+
+      // Build photosData array with actual photos
+      photosData = availablePhotos.map((filename, index) => {
+        // Try to find existing caption from metadata
+        const existingData = metadata?.find(p => p.filename === filename);
+        
+        return {
+          filename: filename,
+          caption: existingData?.caption || `Photo ${index + 1}`,
+          displayOrder: index + 1
+        };
+      });
+      
+      console.log('✅ Photos data ready:', photosData);
+
+      // Always render, even if Firebase failed
       renderPhotosGrid();
+      
+      // Try to save initial data if we have photos but no metadata
+      if (photosData.length > 0 && (!metadata || metadata.length === 0)) {
+        try {
+          await savePhotosMetadata(photosData);
+          console.log('✅ Saved initial photo metadata to Firebase');
+        } catch (error) {
+          console.error('⚠️ Could not save to Firebase:', error);
+        }
+      }
     }
 
     function renderPhotosGrid() {
+      console.log('🎨 Rendering photos grid with', photosData.length, 'photos');
       const grid = document.getElementById('photosGrid');
       grid.innerHTML = '';
 
       if (photosData.length === 0) {
         grid.innerHTML = `
-          <div style="grid-column: 1/-1; text-align: center; padding: 3rem; background: white; border-radius: 8px;">
-            <p style="color: #999; font-size: 1.2rem; margin-bottom: 1rem;">📷 No photos configured yet</p>
-            <p style="color: #666;">Upload photos named <code>photo1.jpg</code> to <code>photo8.jpg</code> to the <code>photos/</code> folder in your GitHub repository.</p>
+          <div style="padding: 3rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; text-align: center;">
+            <p style="color: #856404; font-size: 1.2rem; margin-bottom: 1rem;">⚠️ No photos found!</p>
+            <p style="color: #856404; margin-bottom: 0.5rem;">Upload photos named <code>photo1.jpg</code> through <code>photo8.jpg</code> to the <code>photos/</code> folder</p>
+            <p style="color: #856404; font-size: 0.9rem;">Then refresh this page to see them</p>
           </div>
         `;
         return;
       }
 
-      // Render existing photos (photo1.jpeg through photo8.jpeg)
+      // Render existing photos
       photosData.forEach((photo, index) => {
         const photoItem = createPhotoItem(photo, index);
         grid.appendChild(photoItem);
       });
+      
+      console.log('✅ Photos grid rendered successfully');
     }
 
     function createPhotoItem(photo, index) {
@@ -567,7 +599,7 @@
       };
 
       try {
-        await saveGallerySettings(gallerySettings);
+        await saveGallerySettingsDB(gallerySettings);
         
         // Show brief success message
         const successMessage = document.getElementById('successMessage');
