@@ -36,19 +36,20 @@ export async function savePhotosMetadata(photosMetadata) {
       return true;
     }
 
-    console.log('💾 Saving photo metadata to Firestore...');
+    console.log('💾 Saving photo metadata to Firestore (global)...');
     
-    // Save to Firestore
-    const photosRef = doc(db, 'users', user.uid, 'photos', 'metadata');
+    // Save to GLOBAL location (not per-user)
+    const photosRef = doc(db, 'galleryData', 'photos');
     await setDoc(photosRef, {
       photos: photosMetadata,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
+      lastUpdatedBy: user.uid
     });
     
     // Also cache in localStorage for offline access
     localStorage.setItem('photosMetadata', JSON.stringify(photosMetadata));
     
-    console.log('✅ Photo metadata saved successfully');
+    console.log('✅ Photo metadata saved successfully (global)');
     return true;
     
   } catch (error) {
@@ -65,16 +66,10 @@ export async function savePhotosMetadata(photosMetadata) {
  */
 export async function getPhotosMetadata() {
   try {
-    const user = auth.currentUser;
-    if (!user) {
-      console.warn('⚠️ User not authenticated, loading from localStorage');
-      const cached = localStorage.getItem('photosMetadata');
-      return cached ? JSON.parse(cached) : [];
-    }
-
-    console.log('📥 Loading photo metadata from Firestore...');
+    console.log('📥 Loading photo metadata from Firestore (global)...');
     
-    const photosRef = doc(db, 'users', user.uid, 'photos', 'metadata');
+    // Load from GLOBAL location (not per-user)
+    const photosRef = doc(db, 'galleryData', 'photos');
     const docSnap = await getDoc(photosRef);
     
     if (docSnap.exists()) {
@@ -84,7 +79,7 @@ export async function getPhotosMetadata() {
       // Cache in localStorage
       localStorage.setItem('photosMetadata', JSON.stringify(metadata));
       
-      console.log('✅ Photo metadata loaded from Firestore:', metadata.length, 'photos');
+      console.log('✅ Photo metadata loaded from Firestore (global):', metadata.length, 'photos');
       return metadata;
     } else {
       console.log('ℹ️ No photo metadata found in Firestore, checking localStorage');
@@ -114,18 +109,20 @@ export async function saveGallerySettings(settings) {
       return true;
     }
 
-    console.log('💾 Saving gallery settings to Firestore...');
+    console.log('💾 Saving gallery settings to Firestore (global)...');
     
-    const settingsRef = doc(db, 'users', user.uid, 'gallerySettings', 'config');
+    // Save to GLOBAL location
+    const settingsRef = doc(db, 'galleryData', 'settings');
     await setDoc(settingsRef, {
       ...settings,
-      lastUpdated: new Date().toISOString()
+      lastUpdated: new Date().toISOString(),
+      lastUpdatedBy: user.uid
     });
     
     // Also cache in localStorage
     localStorage.setItem('gallerySettings', JSON.stringify(settings));
     
-    console.log('✅ Gallery settings saved successfully');
+    console.log('✅ Gallery settings saved successfully (global)');
     return true;
     
   } catch (error) {
@@ -141,18 +138,16 @@ export async function saveGallerySettings(settings) {
  */
 export async function getGallerySettings() {
   try {
-    const user = auth.currentUser;
-    if (!user) {
-      const cached = localStorage.getItem('gallerySettings');
-      return cached ? JSON.parse(cached) : null;
-    }
-
-    const settingsRef = doc(db, 'users', user.uid, 'gallerySettings', 'config');
+    console.log('📥 Loading gallery settings from Firestore (global)...');
+    
+    // Load from GLOBAL location
+    const settingsRef = doc(db, 'galleryData', 'settings');
     const docSnap = await getDoc(settingsRef);
     
     if (docSnap.exists()) {
       const settings = docSnap.data();
       localStorage.setItem('gallerySettings', JSON.stringify(settings));
+      console.log('✅ Gallery settings loaded (global)');
       return settings;
     } else {
       const cached = localStorage.getItem('gallerySettings');
