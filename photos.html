@@ -380,14 +380,39 @@
   <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
   <script type="module">
-    import { getPhotosMetadata, getAllPhotos } from './scripts/firebase-storage.js';
+    import { getPhotosMetadata, getGallerySettings } from './scripts/firebase-database.js';
     
     let currentPhotos = [];
     let currentPhotoIndex = 0;
     
+    // Automatically detect available photos (photo1.jpg through photo8.jpg)
+    async function detectAvailablePhotos() {
+      const availablePhotos = [];
+      
+      // Try to load each photo from photo1.jpg to photo8.jpg
+      for (let i = 1; i <= 8; i++) {
+        const filename = `photo${i}.jpg`;
+        const url = `photos/${filename}`;
+        
+        try {
+          // Try to fetch the image to see if it exists
+          const response = await fetch(url, { method: 'HEAD' });
+          if (response.ok) {
+            availablePhotos.push(filename);
+          }
+        } catch (error) {
+          // Photo doesn't exist, skip it
+          console.log(`Photo ${filename} not found, skipping`);
+        }
+      }
+      
+      return availablePhotos;
+    }
+    
     // Load custom photo gallery data
     async function loadPhotoGallery() {
-      const gallerySettings = JSON.parse(localStorage.getItem('gallerySettings'));
+      // Load gallery settings from Firebase Database
+      const gallerySettings = await getGallerySettings();
       
       // Update gallery title and description if custom data exists
       if (gallerySettings) {
@@ -407,46 +432,39 @@
         }
       }
       
-      // Try to get photos from Firebase Storage first
+      // Detect available photos (photo1.jpeg through photo8.jpeg)
       try {
-        const firebasePhotos = await getAllPhotos();
-        console.log('📦 Loaded photos from Firebase Storage:', firebasePhotos.length);
+        const availablePhotos = await detectAvailablePhotos();
+        console.log('📦 Found photos:', availablePhotos);
         
-        if (firebasePhotos.length > 0) {
-          // Convert Firebase Storage format to display format
-          const photosMetadata = getPhotosMetadata();
-          currentPhotos = firebasePhotos.map((photo, index) => {
-            // Try to find existing metadata for captions
-            const existing = photosMetadata.find(p => p.storagePath === photo.storagePath);
+        if (availablePhotos.length > 0) {
+          // Get photo metadata (captions) from Firebase Database
+          const photosMetadata = await getPhotosMetadata();
+          
+          // Build photo array with captions from database or defaults
+          currentPhotos = availablePhotos.map(filename => {
+            const metadata = photosMetadata.find(p => p.filename === filename);
             return {
-              url: photo.url,
-              caption: existing?.caption || photo.name.replace(/\.\w+$/, '').replace(/_/g, ' '),
-              storagePath: photo.storagePath
+              url: `photos/${filename}`,
+              caption: metadata?.caption || filename.replace(/\.\w+$/, '').replace(/_/g, ' '),
+              filename: filename
             };
           });
           
           renderPhotoGallery(currentPhotos);
           document.querySelector('.no-photos-message').classList.remove('active');
         } else {
-          // No photos in Firebase Storage
+          // No photos found
           currentPhotos = [];
           document.querySelector('.photo-gallery').innerHTML = '';
           document.querySelector('.no-photos-message').classList.add('active');
         }
       } catch (error) {
-        console.error('❌ Error loading photos from Firebase:', error);
-        // Fallback to localStorage
-        const photosData = getPhotosMetadata();
-        if (photosData && photosData.length > 0) {
-          currentPhotos = photosData;
-          renderPhotoGallery(photosData);
-          document.querySelector('.no-photos-message').classList.remove('active');
-        } else {
-          // No photos anywhere
-          currentPhotos = [];
-          document.querySelector('.photo-gallery').innerHTML = '';
-          document.querySelector('.no-photos-message').classList.add('active');
-        }
+        console.error('❌ Error loading photos:', error);
+        // No photos available
+        currentPhotos = [];
+        document.querySelector('.photo-gallery').innerHTML = '';
+        document.querySelector('.no-photos-message').classList.add('active');
       }
       
       // Hide loading indicator
@@ -557,7 +575,7 @@
     document.getElementById('lightbox-img').style.transition = 'opacity 0.15s ease';
     
     // Function to toggle sidebar
-    function toggleSidebar() {
+    window.toggleSidebar = function() {
       const sidebar = document.querySelector('.sidebar');
       const main = document.querySelector('main');
       sidebar.classList.toggle('active');
@@ -565,7 +583,7 @@
     }
 
     // Function to close sidebar
-    function closeSidebar() {
+    window.closeSidebar = function() {
       const sidebar = document.querySelector('.sidebar');
       const main = document.querySelector('main');
       sidebar.classList.remove('active');

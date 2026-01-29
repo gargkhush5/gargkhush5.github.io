@@ -50,29 +50,18 @@
   </footer>
   <script src="scripts/auth.js"></script>
   <script src="scripts/auth-ui.js"></script>
-  <script type="module">
-    import { getResumeURL } from './scripts/firebase-storage.js';
-    
-    // Load custom resume data
-    async function loadResumeData() {
+  <script>
+    // Load custom resume data from localStorage
+    function loadResumeData() {
       const resumeData = JSON.parse(localStorage.getItem('resumeData'));
       
-      // Try to load resume file from Firebase Storage
-      try {
-        const resumeFile = await getResumeURL();
-        
-        // Update download link if resume file exists
-        if (resumeFile && resumeFile.url) {
-          const downloadBtn = document.getElementById('downloadBtn');
-          const description = document.getElementById('resumeDescription');
-          
-          downloadBtn.href = resumeFile.url;
-          downloadBtn.download = resumeFile.name || 'resume.pdf';
-          description.textContent = `Download my latest resume (${resumeFile.name || 'resume.pdf'}):`;
-        }
-      } catch (error) {
-        console.error('Error loading resume:', error);
-      }
+      // Set the download link to local resume.pdf file
+      const downloadBtn = document.getElementById('downloadBtn');
+      const description = document.getElementById('resumeDescription');
+      
+      downloadBtn.href = 'resume.pdf';
+      downloadBtn.download = 'Khush_Garg_Resume.pdf';
+      description.textContent = 'Click the button below to download my resume (PDF):';
       
       // Display resume content preview if available
       if (resumeData && resumeData.personalInfo) {
@@ -135,7 +124,8 @@
           resumeContent.innerHTML = contentHTML;
           preview.style.display = 'block';
         }
-      }    }
+      }
+    }
     
     // Function to toggle sidebar
     function toggleSidebar() {
