@@ -81,6 +81,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      overflow: hidden;
+      word-wrap: break-word;
     }
     .note-item:hover {
       border-color: #004f90;
@@ -94,6 +96,9 @@
       font-weight: 600;
       color: #004f90;
       margin-bottom: 0.3rem;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-width: 100%;
     }
     .note-preview {
       color: #666;
@@ -101,6 +106,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      max-width: 100%;
+      word-wrap: break-word;
     }
     .note-date {
       font-size: 0.75rem;
@@ -145,6 +152,7 @@
       min-height: 400px;
       max-height: 600px;
       overflow-y: auto;
+      overflow-x: hidden;
       padding: 1.5rem;
       border: 1px solid #dee2e6;
       border-radius: 8px;
@@ -152,6 +160,9 @@
       font-size: 1rem;
       line-height: 1.6;
       outline: none;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     #noteEditor:focus {
       border-color: #004f90;
@@ -551,11 +562,13 @@
         const noteRef = doc(db, 'users', user.uid, 'notes', noteId);
         await setDoc(noteRef, noteData);
 
-        currentNoteId = noteId;
         showSuccess('✅ Note saved successfully!');
         
-        // Reload notes list
-        await loadAllNotes();
+        // Close editor and reload notes list
+        setTimeout(async () => {
+          closeEditor();
+          await loadAllNotes();
+        }, 1000);
         
       } catch (error) {
         console.error('❌ Error saving note:', error);

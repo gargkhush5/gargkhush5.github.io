@@ -55,14 +55,14 @@ export async function performLogout() {
       updateAuthUI();
     }
     
-    // 5. Force redirect to login page immediately
-    console.log('🔄 Redirecting to login...');
-    window.location.replace('author-login.html');
+    // 5. Force redirect to home page immediately
+    console.log('🔄 Redirecting to home...');
+    window.location.replace('index.html');
     
   } catch (error) {
     console.error('❌ Logout error:', error);
     // Even if there's an error, still try to redirect
-    window.location.replace('author-login.html');
+    window.location.replace('index.html');
   }
 }
 
