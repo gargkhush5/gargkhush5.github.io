@@ -96,6 +96,8 @@
     }
     .profile-social a:hover {
       background: #3b5998;
+      transform: scale(1.15);
+      transition: all 0.3s ease;
     }
     .section-title {
       color: #004f90;
@@ -105,6 +107,12 @@
       font-size: 1.3rem;
       font-weight: 600;
       letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-icon {
+      font-size: 1.4rem;
     }
     .info-card {
       background: white;
@@ -126,16 +134,106 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.7rem 1.2rem;
+      margin-top: 0.5rem;
     }
     .skills-list li {
       background: #e3e6f3;
       color: #004f90;
       border-radius: 20px;
-      padding: 0.3rem 1rem;
+      padding: 0.4rem 1rem;
       font-weight: 500;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       margin-bottom: 0.5rem;
       display: inline-block;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+    }
+    .skills-list li:hover {
+      background: #004f90;
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 79, 144, 0.2);
+    }
+    .skill-category {
+      margin-bottom: 1.2rem;
+    }
+    .skill-category-title {
+      font-weight: 600;
+      color: #003b6d;
+      margin-bottom: 0.5rem;
+      font-size: 0.98rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .achievement-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: linear-gradient(135deg, #004f90 0%, #003b6d 100%);
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin-bottom: 0.8rem;
+      box-shadow: 0 3px 10px rgba(0, 79, 144, 0.15);
+      transition: all 0.3s ease;
+    }
+    .achievement-badge:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 79, 144, 0.25);
+    }
+    .achievement-icon {
+      font-size: 1.3rem;
+      display: flex;
+      align-items: center;
+    }
+    .achievement-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .achievement-text strong {
+      font-size: 0.95rem;
+    }
+    .achievement-text small {
+      font-size: 0.8rem;
+      opacity: 0.9;
+    }
+    .project-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f5f7fc 100%);
+      border-left: 4px solid #004f90;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 79, 144, 0.08);
+    }
+    .project-card:hover {
+      box-shadow: 0 6px 20px rgba(0, 79, 144, 0.15);
+      transform: translateX(4px);
+      border-left-color: #3b5998;
+    }
+    .project-card strong {
+      font-size: 1.05rem;
+      color: #004f90;
+    }
+    .project-card em {
+      font-size: 0.95rem;
+      color: #555;
+    }
+    .project-badge {
+      display: inline-block;
+      background: #e3e6f3;
+      color: #004f90;
+      padding: 0.3rem 0.8rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+      margin-right: 0.5rem;
+    }
+    .project-badge.active {
+      background: #10b981;
+      color: white;
     }
     .info-card h3 {
       margin: 0.5rem 0 0.2rem 0;
@@ -196,7 +294,7 @@
     <div class="main-flex">
       <div class="left-content">
         <section class="info-card">
-          <h2 class="section-title">Professional Summary</h2>
+          <h2 class="section-title"><span class="section-icon">👤</span>Professional Summary</h2>
           <p>
             Power Systems Management Researcher at MNIT Jaipur with experience in data-driven energy solutions, MATLAB/Python programming, and power system analysis. Expertise in renewable integration and smart grid technologies, Power Market Regulations, RPO, PPA and related areas. Worked on Open Access, Cyber Security of Power System, Attack detection and prevention. Currently focusing on the production of Green Hydrogen in India.<br>
             Keen on continuous learning, especially in automation and emerging energy technologies. Interested in smart control, data analytics, and modern energy management to improve efficiency and sustainability.
@@ -204,7 +302,7 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Education</h2>
+          <h2 class="section-title"><span class="section-icon">📚</span>Education</h2>
           <ul class="info-list">
             <li>
               <strong>M.Tech in Power Systems Management</strong><br>
@@ -237,7 +335,7 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Experience</h2>
+          <h2 class="section-title"><span class="section-icon">💼</span>Experience</h2>
           <ul class="info-list">
             <li>
               <strong>Electrical Engineering Trainee</strong><br>
@@ -259,78 +357,105 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Projects</h2>
-          <ul class="info-list">
-            <li>
-              <strong>Green Hydrogen Infrastructure Assessment & LCOH Analysis</strong><br>
-              M.Tech Dissertation, MNIT Jaipur (2024 - Present)<br>
-              <em>
-                Calculated Levelized Cost of Hydrogen (LCOH) considering Indian regulatory frameworks and renewable energy mix. Projected future Green Hydrogen demand and performed infrastructure assessment simulation using PyPSA and GAMSpy.
-              </em>
-            </li>
-            <li>
-              <strong>MNIT Resale - Student Marketplace</strong><br>
-              Marketplace for New and Ideal Things within Campus (2025)<br>
-              <em>
-                Developed and launched a free, no-mediator campus marketplace; benefited 1,500+ students to date. Reduced waste and improved affordability through peer-to-peer reuse on campus. <a href="https://mnitresale.shop" target="_blank" style="color:#004f90;">Visit Website</a>
-              </em>
-            </li>
-            <li>
-              <strong>HVDC Transmission and FACTS Devices</strong><br>
-              B.Tech Seminar Project, Rajasthan Technical University, Kota (2019-2020)<br>
-              <em>
-                Analyzed HVDC principles for efficient long-distance transmission and FACTS devices for grid stability enhancement. Investigated improvements in power transfer capacity and voltage controllability within transmission networks.
-              </em>
-            </li>
-            <li>
-              <strong>Thermal Power Plant Study</strong><br>
-              B.Tech Project Presentation, Rajasthan Technical University, Kota (2019-2020)<br>
-              <em>
-                Presented a comprehensive study of the operations of thermal power plants, including coal handling, water treatment, boiler systems, and power generation. Highlighted key components like turbines, condensers, and electrostatic precipitators.
-              </em>
-            </li>
-          </ul>
+          <h2 class="section-title"><span class="section-icon">🚀</span>Projects</h2>
+          <div class="project-card">
+            <strong>🟢 Green Hydrogen Infrastructure Assessment & LCOH Analysis</strong><span class="project-badge active">Current</span><br>
+            M.Tech Dissertation, MNIT Jaipur (2024 - Present)<br>
+            <em>
+              Calculated Levelized Cost of Hydrogen (LCOH) considering Indian regulatory frameworks and renewable energy mix. Projected future Green Hydrogen demand and performed infrastructure assessment simulation using PyPSA and GAMSpy.
+            </em>
+          </div>
+          <div class="project-card">
+            <strong>🛒 MNIT Resale - Student Marketplace</strong><span class="project-badge">Live</span><br>
+            Marketplace for New and Ideal Things within Campus (2025)<br>
+            <em>
+              Developed and launched a free, no-mediator campus marketplace; benefited 1,500+ students to date. Reduced waste and improved affordability through peer-to-peer reuse on campus. <a href="https://mnitresale.shop" target="_blank" style="color:#004f90; font-weight:600;">→ Visit Website</a>
+            </em>
+          </div>
+          <div class="project-card">
+            <strong>⚡ HVDC Transmission and FACTS Devices</strong><span class="project-badge">Academic</span><br>
+            B.Tech Seminar Project, Rajasthan Technical University, Kota (2019-2020)<br>
+            <em>
+              Analyzed HVDC principles for efficient long-distance transmission and FACTS devices for grid stability enhancement. Investigated improvements in power transfer capacity and voltage controllability within transmission networks.
+            </em>
+          </div>
+          <div class="project-card">
+            <strong>🏭 Thermal Power Plant Study</strong><span class="project-badge">Academic</span><br>
+            B.Tech Project Presentation, Rajasthan Technical University, Kota (2019-2020)<br>
+            <em>
+              Presented a comprehensive study of the operations of thermal power plants, including coal handling, water treatment, boiler systems, and power generation. Highlighted key components like turbines, condensers, and electrostatic precipitators.
+            </em>
+          </div>
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Skills</h2>
-          <ul class="skills-list">
-            <li><strong>Languages:</strong> C</li>
-            <li>C++</li>
-            <li>Python</li>
-            <li>SQL</li>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-            <li><strong>Software:</strong> MATLAB</li>
-            <li>GAMS</li>
-            <li>PLEXOS</li>
-            <li>PSS®E</li>
-            <li>PyPSA</li>
-            <li>LEAP</li>
-            <li>MS Office</li>
-            <li>Power BI</li>
-            <li>LaTeX</li>
-            <li><strong>Domains:</strong> Power System Analysis</li>
-            <li>Smart Grid Technologies</li>
-            <li>Renewable Integration</li>
-            <li>Power Market Regulations</li>
-            <li>Data Analytics</li>
-            <li>Green Hydrogen</li>
-          </ul>
+          <h2 class="section-title"><span class="section-icon">🛠️</span>Skills</h2>
+          <div class="skill-category">
+            <div class="skill-category-title">💻 Languages</div>
+            <ul class="skills-list">
+              <li>C</li>
+              <li>C++</li>
+              <li>Python</li>
+              <li>SQL</li>
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>JavaScript</li>
+            </ul>
+          </div>
+          <div class="skill-category">
+            <div class="skill-category-title">⚙️ Software Tools</div>
+            <ul class="skills-list">
+              <li>MATLAB</li>
+              <li>GAMS</li>
+              <li>PLEXOS</li>
+              <li>PSS®E</li>
+              <li>PyPSA</li>
+              <li>LEAP</li>
+              <li>MS Office</li>
+              <li>Power BI</li>
+              <li>LaTeX</li>
+            </ul>
+          </div>
+          <div class="skill-category">
+            <div class="skill-category-title">⚡ Domain Expertise</div>
+            <ul class="skills-list">
+              <li>Power System Analysis</li>
+              <li>Smart Grid Technologies</li>
+              <li>Renewable Integration</li>
+              <li>Power Market Regulations</li>
+              <li>Data Analytics</li>
+              <li>Green Hydrogen</li>
+            </ul>
+          </div>
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Courses & Achievements</h2>
-          <ul class="info-list">
-            <li><strong>Rajasthan State Certificate in Information Technology (98%)</strong> - Vardhmaan Mahaveer Open University, Kota (2020)</li>
-            <li><strong>Bootcamp on Android Fundamentals and App Development</strong> - Department of CSE, MNIT Jaipur (Feb 2025). Sponsored by Information Security Education and Awareness (ISEA) - Phase III</li>
-            <li><strong>GATE Qualified (2024)</strong></li>
-          </ul>
+          <h2 class="section-title"><span class="section-icon">🏆</span>Achievements</h2>
+          <div class="achievement-badge">
+            <div class="achievement-icon">⭐</div>
+            <div class="achievement-text">
+              <strong>GATE Qualified 2024</strong>
+              <small>Graduate Aptitude Test in Engineering</small>
+            </div>
+          </div>
+          <div class="achievement-badge">
+            <div class="achievement-icon">📜</div>
+            <div class="achievement-text">
+              <strong>Rajasthan State Certificate in IT (98%)</strong>
+              <small>Vardhmaan Mahaveer Open University, Kota • 2020</small>
+            </div>
+          </div>
+          <div class="achievement-badge">
+            <div class="achievement-icon">📱</div>
+            <div class="achievement-text">
+              <strong>Android Fundamentals Bootcamp</strong>
+              <small>MNIT Jaipur • Feb 2025 • ISEA-III Sponsored</small>
+            </div>
+          </div>
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Volunteering & Leadership</h2>
+          <h2 class="section-title"><span class="section-icon">🤝</span>Volunteering & Leadership</h2>
           <ul class="info-list">
             <li><strong>National Service Scheme (NSS)</strong> - Jan 2015 - Jan 2016</li>
             <li><strong>Secretary, IEEE PES SBC MNIT Jaipur</strong> - Sept 2024 - current</li>
@@ -341,7 +466,7 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Languages</h2>
+          <h2 class="section-title"><span class="section-icon">🌍</span>Languages</h2>
           <ul class="lang-list">
             <li>Hindi</li>
             <li>English</li>
@@ -350,7 +475,7 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Hobbies</h2>
+          <h2 class="section-title"><span class="section-icon">🎯</span>Hobbies</h2>
           <ul class="hobby-list">
             <li>Yoga</li>
             <li>Chess</li>
@@ -360,7 +485,7 @@
         </section>
 
         <section class="info-card">
-          <h2 class="section-title">Personal Portfolio</h2>
+          <h2 class="section-title"><span class="section-icon">🔗</span>Personal Portfolio</h2>
           <ul class="info-list">
             <li><strong>Website:</strong> <a href="https://khush.engineer" target="_blank" style="color:#004f90;">https://khush.engineer</a></li>
           </ul>
