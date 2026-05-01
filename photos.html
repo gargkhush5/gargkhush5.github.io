@@ -385,12 +385,12 @@
     let currentPhotos = [];
     let currentPhotoIndex = 0;
     
-    // Automatically detect available photos (photo1.jpg through photo8.jpg)
+    // Automatically detect available photos (photo1.jpg through photo12.jpg)
     async function detectAvailablePhotos() {
       const availablePhotos = [];
       
-      // Try to load each photo from photo1.jpg to photo8.jpg
-      for (let i = 1; i <= 8; i++) {
+      // Try to load each photo from photo1.jpg to photo12.jpg
+      for (let i = 1; i <= 12; i++) {
         const filename = `photo${i}.jpg`;
         const url = `photos/${filename}`;
         
@@ -432,7 +432,7 @@
         }
       }
       
-      // Detect available photos (photo1.jpeg through photo8.jpeg)
+      // Detect available photos (photo1.jpeg through photo12.jpeg)
       try {
         const availablePhotos = await detectAvailablePhotos();
         console.log('📦 Found photos:', availablePhotos);
